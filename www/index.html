@@ -412,6 +412,13 @@ header{
 }
 .playerNameInput::placeholder{color:rgba(255,255,255,.48)}
 .playerNameInput:focus{border-color:#f4cf77;box-shadow:0 0 0 3px rgba(217,177,91,.16)}
+.playerNameInput.duplicate{border-color:#ff7777;box-shadow:0 0 0 3px rgba(255,90,90,.14)}
+.playerNameError{
+ min-height:20px;margin:-6px auto 8px;color:#ff9b9b;
+ font-size:13px;font-weight:900;text-align:center
+}
+#startBtn:disabled{opacity:.42;filter:grayscale(.5);cursor:not-allowed;box-shadow:none}
+
 .rankBox{
  width:min(520px,88vw);margin:18px auto 0;padding:14px;
  border:1px solid rgba(217,177,91,.55);border-radius:18px;background:rgba(9,5,4,.40);
@@ -485,7 +492,8 @@ header{
   <h1>O Gaúcho</h1><h2>Desafio da Taça Perfeita</h2>
   <p>Digite seu nome antes de começar. Sua pontuação poderá entrar no <b>Top 10</b>.</p>
   <label class="playerNameLabel" for="playerName">NOME DO JOGADOR</label>
-  <input class="playerNameInput" id="playerName" type="text" maxlength="24" autocomplete="off" placeholder="Digite seu nome">
+  <input class="playerNameInput" id="playerName" type="text" maxlength="24" autocomplete="off" placeholder="Digite seu nome" aria-describedby="playerNameError">
+  <div class="playerNameError" id="playerNameError" aria-live="polite"></div>
   <p style="font-size:14px;margin:4px 0 10px">Você tem <b>30 segundos</b> para atingir <b>1000 pontos</b>.</p>
   <div class="actions">
    <button class="primary" id="startBtn">COMEÇAR</button>
@@ -1408,9 +1416,62 @@ function stopLiquidSound(){
 
 // ===== V53 — CADASTRO DO JOGADOR + RANKING TOP 10 =====
 const RANKING_KEY='o-gaucho-ranking-v53';
+const PLAYER_NAMES_KEY='o-gaucho-player-names-v54';
 
 function cleanPlayerName(value){
  return String(value||'').replace(/\s+/g,' ').trim().slice(0,24);
+}
+function normalizePlayerName(value){
+ return cleanPlayerName(value)
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g,'')
+  .toLowerCase();
+}
+function getUsedPlayerNames(){
+ let names=[];
+ try{
+   const saved=JSON.parse(localStorage.getItem(PLAYER_NAMES_KEY)||'[]');
+   if(Array.isArray(saved))names=saved.filter(x=>typeof x==='string');
+ }catch(_){}
+ // Migra automaticamente os nomes que já estavam no ranking da versão anterior.
+ try{
+   const oldRanking=JSON.parse(localStorage.getItem(RANKING_KEY)||'[]');
+   if(Array.isArray(oldRanking)){
+     oldRanking.forEach(x=>{if(x&&typeof x.name==='string')names.push(cleanPlayerName(x.name));});
+   }
+ }catch(_){}
+ const unique=[];
+ const seen=new Set();
+ names.forEach(name=>{
+   const clean=cleanPlayerName(name),key=normalizePlayerName(clean);
+   if(clean&&key&&!seen.has(key)){seen.add(key);unique.push(clean);}
+ });
+ return unique;
+}
+function playerNameAlreadyUsed(name){
+ const key=normalizePlayerName(name);
+ if(!key)return false;
+ return getUsedPlayerNames().some(saved=>normalizePlayerName(saved)===key);
+}
+function rememberPlayerName(name){
+ const clean=cleanPlayerName(name);
+ if(!clean)return false;
+ const names=getUsedPlayerNames();
+ if(names.some(saved=>normalizePlayerName(saved)===normalizePlayerName(clean)))return false;
+ names.push(clean);
+ try{localStorage.setItem(PLAYER_NAMES_KEY,JSON.stringify(names));return true}catch(_){return true}
+}
+function validatePlayerName(){
+ const input=$('playerName'),error=$('playerNameError'),button=$('startBtn');
+ const name=cleanPlayerName(input.value);
+ let message='';
+ if(!name)message='';
+ else if(name.length<2)message='Digite pelo menos 2 caracteres.';
+ else if(playerNameAlreadyUsed(name))message='Este nome já foi usado. Digite outro nome.';
+ input.classList.toggle('duplicate',!!message&&playerNameAlreadyUsed(name));
+ error.textContent=message;
+ button.disabled=!name||name.length<2||!!message;
+ return !button.disabled;
 }
 function escapeHTML(value){
  return String(value||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
@@ -1462,17 +1523,27 @@ function openRegistration(){
  $('rankingOverlay').classList.add('hidden');
  $('start').classList.remove('hidden');
  $('playerName').value='';
+ $('playerNameError').textContent='';
+ $('playerName').classList.remove('duplicate');
+ $('startBtn').disabled=true;
  renderRanking('startRanking');
  setTimeout(()=>{$('playerName').focus()},80);
 }
 function registerAndStart(){
  const name=cleanPlayerName($('playerName').value);
- if(!name){
+ if(!validatePlayerName()){
    $('playerName').focus();
    $('playerName').animate(
      [{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(0)'}],
      {duration:260}
    );
+   return;
+ }
+ if(!rememberPlayerName(name)){
+   $('playerNameError').textContent='Este nome já foi usado. Digite outro nome.';
+   $('playerName').classList.add('duplicate');
+   $('startBtn').disabled=true;
+   $('playerName').focus();
    return;
  }
  currentPlayer=name;
@@ -1663,7 +1734,8 @@ $('startBackBtn').onclick=returnToCover;
 $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
 $('coverStart').onclick=openRegistration;
 $('coverRankingBtn').onclick=openRanking;$('closeRankingBtn').onclick=closeRanking;
-$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')registerAndStart()});
+$('playerName').addEventListener('input',validatePlayerName);
+$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter'&&validatePlayerName())registerAndStart()});
 renderRanking('startRanking');renderRanking('coverRanking');
 render();
 </script>
