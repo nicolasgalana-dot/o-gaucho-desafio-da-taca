@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#641018">
-<title>Desafio O Gaúcho</title>
+<title>Desafio O Gaúcho — Online</title>
 <style>
 :root{--wine:#7d0e1c;--gold:#d9b15b;--cream:#f7eedc;--dark:#170c0b;--green:#65a944}
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none;touch-action:none}
@@ -181,7 +181,7 @@ header{position:absolute;left:3vw;right:3vw;top:2vh;display:flex;align-items:fle
 .coverScreen.hidden{display:none}
 .coverArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .coverShade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,3,2,.25) 72%,rgba(8,3,2,.72) 100%);pointer-events:none}
-.coverStart{position:absolute;left:50%;bottom:15.7%;transform:translateX(-50%);z-index:2;width:50%;height:7.2%;border:0;background:transparent;color:transparent;font-size:0;cursor:pointer;touch-action:manipulation}
+.coverStart{position:absolute;z-index:34;border:0;background:transparent;color:transparent;font-size:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 
 
 /* V6 — acabamento visual inspirado na capa oficial */
@@ -420,7 +420,7 @@ header{
 #startBtn:disabled{opacity:.42;filter:grayscale(.5);cursor:not-allowed;box-shadow:none}
 
 .rankBox{
- width:min(520px,88vw);margin:18px auto 0;padding:14px;
+ width:min(560px,92vw);margin:18px auto 0;padding:14px;
  border:1px solid rgba(217,177,91,.55);border-radius:18px;background:rgba(9,5,4,.40);
 }
 .rankTitle{font-size:17px;font-weight:1000;letter-spacing:.06em;color:#f4d27f;margin-bottom:9px}
@@ -432,15 +432,15 @@ header{
 }
 .rankRow.current{outline:2px solid rgba(139,226,103,.85);background:rgba(75,146,48,.23)}
 .rankPos{text-align:center;color:#f1cf78;font-weight:1000}
-.rankName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rankScore{color:#fff4cf;font-weight:1000}
+.rankName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.18em}
+.rankScore{color:#fff4cf;font-weight:1000;min-width:72px;text-align:right}
 .rankEmpty{text-align:center;padding:12px;color:#d7c5a4;font-size:14px}
 .endPlayer{margin:4px 0 0;color:#f4d27f;font-weight:900}
 .rankStatus{display:block;margin-top:8px;color:#d9ffb9;font-weight:900}
 @media(max-width:700px){
  .coverRankingBtn{top:10px;right:10px;padding:9px 13px;font-size:12px}
  .rankBox{margin-top:12px;padding:10px}
- .rankRow{grid-template-columns:34px minmax(0,1fr) auto;font-size:12px;padding:7px 8px}
+ .rankRow{grid-template-columns:34px minmax(0,1fr) 72px;font-size:13px;padding:7px 7px}.rankName{font-size:1.22em}
  .playerNameInput{font-size:18px;padding:13px 14px}
 }
 
@@ -533,7 +533,7 @@ header{
 <div class="overlay hidden" id="rankingOverlay">
  <div class="panel">
   <h2>🏆 RANKING</h2>
-  <p>As 10 maiores pontuações deste aparelho.</p>
+  <p>As 10 maiores pontuações de todos os jogadores.</p>
   <div class="rankBox">
    <div class="rankTitle">TOP 10 — DESAFIO DA TAÇA</div>
    <div class="rankingList" id="coverRanking"></div>
@@ -547,7 +547,7 @@ header{
 <script>
 const $=id=>document.getElementById(id);
 let running=false,paused=false,pouring=false,fill=0,score=0,glasses=0,time=30,last=0,raf=null,timer=null,locked=false;
-let currentPlayer='',lastRankingEntryId=null;
+let currentPlayer='',currentPlayerToken='',lastRankingEntryId=null,rankingFromEndGame=false;
 const wine=$('wine'), marker=$('marker'), flash=$('flash'), bottle=$('bottle'), perfectAlert=$('perfectHitAlert');
 const canvas=$('streamCanvas'), ctx=canvas.getContext('2d');
 const surfaceCanvas=$('wineSurface'), sctx=surfaceCanvas.getContext('2d');
@@ -1414,9 +1414,8 @@ function stopLiquidSound(){
 
 
 
-// ===== V53 — CADASTRO DO JOGADOR + RANKING TOP 10 =====
-const RANKING_KEY='o-gaucho-ranking-v53';
-const PLAYER_NAMES_KEY='o-gaucho-player-names-v54';
+// ===== V63 — RANKING ONLINE COMPARTILHADO =====
+const RANKING_API='/api/ranking';
 
 function cleanPlayerName(value){
  return String(value||'').replace(/\s+/g,' ').trim().slice(0,24);
@@ -1427,48 +1426,12 @@ function normalizePlayerName(value){
   .replace(/[\u0300-\u036f]/g,'')
   .toLowerCase();
 }
-function getUsedPlayerNames(){
- let names=[];
- try{
-   const saved=JSON.parse(localStorage.getItem(PLAYER_NAMES_KEY)||'[]');
-   if(Array.isArray(saved))names=saved.filter(x=>typeof x==='string');
- }catch(_){}
- // Migra automaticamente os nomes que já estavam no ranking da versão anterior.
- try{
-   const oldRanking=JSON.parse(localStorage.getItem(RANKING_KEY)||'[]');
-   if(Array.isArray(oldRanking)){
-     oldRanking.forEach(x=>{if(x&&typeof x.name==='string')names.push(cleanPlayerName(x.name));});
-   }
- }catch(_){}
- const unique=[];
- const seen=new Set();
- names.forEach(name=>{
-   const clean=cleanPlayerName(name),key=normalizePlayerName(clean);
-   if(clean&&key&&!seen.has(key)){seen.add(key);unique.push(clean);}
- });
- return unique;
-}
-function playerNameAlreadyUsed(name){
- const key=normalizePlayerName(name);
- if(!key)return false;
- return getUsedPlayerNames().some(saved=>normalizePlayerName(saved)===key);
-}
-function rememberPlayerName(name){
- const clean=cleanPlayerName(name);
- if(!clean)return false;
- const names=getUsedPlayerNames();
- if(names.some(saved=>normalizePlayerName(saved)===normalizePlayerName(clean)))return false;
- names.push(clean);
- try{localStorage.setItem(PLAYER_NAMES_KEY,JSON.stringify(names));return true}catch(_){return true}
-}
 function validatePlayerName(){
  const input=$('playerName'),error=$('playerNameError'),button=$('startBtn');
  const name=cleanPlayerName(input.value);
  let message='';
- if(!name)message='';
- else if(name.length<2)message='Digite pelo menos 2 caracteres.';
- else if(playerNameAlreadyUsed(name))message='Este nome já foi usado. Digite outro nome.';
- input.classList.toggle('duplicate',!!message&&playerNameAlreadyUsed(name));
+ if(name && name.length<2)message='Digite pelo menos 2 caracteres.';
+ input.classList.remove('duplicate');
  error.textContent=message;
  button.disabled=!name||name.length<2||!!message;
  return !button.disabled;
@@ -1476,47 +1439,60 @@ function validatePlayerName(){
 function escapeHTML(value){
  return String(value||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 }
-function getRanking(){
- try{
-   const data=JSON.parse(localStorage.getItem(RANKING_KEY)||'[]');
-   if(!Array.isArray(data))return [];
-   return data
-    .filter(x=>x&&typeof x.name==='string'&&Number.isFinite(Number(x.score)))
-    .map(x=>({id:String(x.id||''),name:cleanPlayerName(x.name)||'Jogador',score:Number(x.score),at:Number(x.at)||0}))
-    .sort((a,b)=>b.score-a.score||a.at-b.at)
-    .slice(0,10);
- }catch(e){return []}
-}
-function setRanking(list){
- try{localStorage.setItem(RANKING_KEY,JSON.stringify(list.slice(0,10)));return true}catch(e){return false}
-}
-function saveScoreToRanking(name,points){
- const entry={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,8),name:cleanPlayerName(name)||'Jogador',score:Number(points)||0,at:Date.now()};
- let list=getRanking();
- list.push(entry);
- list.sort((a,b)=>b.score-a.score||a.at-b.at);
- list=list.slice(0,10);
- setRanking(list);
- lastRankingEntryId=entry.id;
- const pos=list.findIndex(x=>x.id===entry.id);
- return pos>=0?pos+1:null;
-}
-function renderRanking(targetId,highlightId=''){
- const el=$(targetId);if(!el)return;
- const list=getRanking();
- if(!list.length){
-   el.innerHTML='<div class="rankEmpty">Ainda não há pontuações. Seja o primeiro!</div>';
-   return;
+async function rankingRequest(options={}){
+ const response=await fetch(RANKING_API,{
+   cache:'no-store',
+   headers:{'Content-Type':'application/json',...(options.headers||{})},
+   ...options
+ });
+ let data={};
+ try{data=await response.json()}catch(_){}
+ if(!response.ok){
+   const err=new Error(data.message||'Não foi possível acessar o ranking online.');
+   err.status=response.status;err.code=data.code||'RANKING_ERROR';throw err;
  }
- el.innerHTML=list.map((x,i)=>{
-   const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1)+'º';
-   const current=highlightId&&x.id===highlightId?' current':'';
-   return '<div class="rankRow'+current+'"><div class="rankPos">'+medal+'</div><div class="rankName">'+escapeHTML(x.name)+'</div><div class="rankScore">'+x.score+' pts</div></div>';
- }).join('');
+ return data;
+}
+async function fetchRanking(){
+ const data=await rankingRequest({method:'GET'});
+ return Array.isArray(data.ranking)?data.ranking:[];
+}
+async function startPlayerSession(name){
+ return rankingRequest({
+   method:'POST',
+   body:JSON.stringify({action:'start',name})
+ });
+}
+async function saveScoreToRanking(name,points){
+ return rankingRequest({
+   method:'POST',
+   body:JSON.stringify({action:'score',name,token:currentPlayerToken,score:Number(points)||0})
+ });
+}
+async function renderRanking(targetId,highlightName=''){
+ const el=$(targetId);if(!el)return [];
+ el.innerHTML='<div class="rankEmpty">Atualizando ranking...</div>';
+ try{
+   const list=await fetchRanking();
+   if(!list.length){
+     el.innerHTML='<div class="rankEmpty">Ainda não há pontuações. Seja o primeiro!</div>';
+     return list;
+   }
+   const highlight=normalizePlayerName(highlightName);
+   el.innerHTML=list.map((x,i)=>{
+     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1)+'º';
+     const current=highlight&&normalizePlayerName(x.name)===highlight?' current':'';
+     return '<div class="rankRow'+current+'"><div class="rankPos">'+medal+'</div><div class="rankName">'+escapeHTML(x.name)+'</div><div class="rankScore">'+Number(x.score||0)+' pts</div></div>';
+   }).join('');
+   return list;
+ }catch(err){
+   el.innerHTML='<div class="rankEmpty">Ranking online indisponível. Verifique a conexão.</div>';
+   return [];
+ }
 }
 function openRegistration(){
  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
- currentPlayer='';lastRankingEntryId=null;
+ currentPlayer='';currentPlayerToken='';lastRankingEntryId=null;rankingFromEndGame=false;
  $('coverScreen').classList.add('hidden');
  $('end').classList.add('hidden');
  $('pauseOverlay').classList.add('hidden');
@@ -1529,7 +1505,7 @@ function openRegistration(){
  renderRanking('startRanking');
  setTimeout(()=>{$('playerName').focus()},80);
 }
-function registerAndStart(){
+async function registerAndStart(){
  const name=cleanPlayerName($('playerName').value);
  if(!validatePlayerName()){
    $('playerName').focus();
@@ -1539,25 +1515,64 @@ function registerAndStart(){
    );
    return;
  }
- if(!rememberPlayerName(name)){
-   $('playerNameError').textContent='Este nome já foi usado. Digite outro nome.';
-   $('playerName').classList.add('duplicate');
-   $('startBtn').disabled=true;
+ const btn=$('startBtn'),error=$('playerNameError');
+ btn.disabled=true;error.textContent='Verificando nome no ranking...';
+ try{
+   const session=await startPlayerSession(name);
+   currentPlayer=session.name||name;
+   currentPlayerToken=session.token||'';
+   error.textContent='';
+   startGame();
+ }catch(err){
+   if(err.status===409||err.code==='NAME_ALREADY_USED'){
+     error.textContent='Este nome já foi utilizado. Digite um nome diferente.';
+     $('playerName').classList.add('duplicate');
+   }else{
+     error.textContent='Não foi possível conectar ao ranking online. Tente novamente.';
+   }
+   btn.disabled=false;
    $('playerName').focus();
-   return;
  }
- currentPlayer=name;
- startGame();
 }
-function openRanking(){
- renderRanking('coverRanking');
+async function openRanking(){
  $('rankingOverlay').classList.remove('hidden');
+ await renderRanking('coverRanking',currentPlayer);
 }
-function closeRanking(){
+async function closeRanking(){
  $('rankingOverlay').classList.add('hidden');
+ if(rankingFromEndGame){
+   rankingFromEndGame=false;
+   await renderRanking('endRanking',currentPlayer);
+   $('end').classList.remove('hidden');
+ }
 }
+function replaySamePlayer(){
+ if(currentPlayer&&currentPlayerToken){
+   rankingFromEndGame=false;
+   $('rankingOverlay').classList.add('hidden');
+   $('end').classList.add('hidden');
+   startGame();
+ }else{
+   openRegistration();
+ }
+}
+function alignCoverStartToArtwork(){
+ const cover=$('coverScreen'),img=cover&&cover.querySelector('.coverArt'),btn=$('coverStart');
+ if(!cover||!img||!btn)return;
+ const cw=cover.clientWidth,ch=cover.clientHeight,iw=img.naturalWidth||944,ih=img.naturalHeight||1664;
+ if(!cw||!ch||!iw||!ih)return;
+ const scale=Math.min(cw/iw,ch/ih),rw=iw*scale,rh=ih*scale,ox=(cw-rw)/2,oy=(ch-rh)/2;
+ btn.style.left=(ox+rw*.243)+'px';
+ btn.style.top=(oy+rh*.750)+'px';
+ btn.style.width=(rw*.505)+'px';
+ btn.style.height=(rh*.071)+'px';
+ btn.style.transform='none';btn.style.bottom='auto';
+}
+window.addEventListener('resize',alignCoverStartToArtwork);
+window.addEventListener('orientationchange',()=>setTimeout(alignCoverStartToArtwork,120));
+// ===== FIM V63 =====
 
-// V52 — retorno automático para a capa em 10s + pause + acerto perfeito sem balão menor + novo som arcade.
+// V63 — ranking compartilhado + sessão do jogador + pause + efeitos.
 let autoReturnCoverTimer=null;
 
 function startCountdownTimer(){
@@ -1587,8 +1602,9 @@ function returnToCover(){
  $('pauseOverlay').classList.add('hidden');
  $('rankingOverlay').classList.add('hidden');
  $('pauseBtn').classList.add('hidden');
- currentPlayer='';lastRankingEntryId=null;
+ currentPlayer='';currentPlayerToken='';lastRankingEntryId=null;rankingFromEndGame=false;
  $('coverScreen').classList.remove('hidden');
+ setTimeout(alignCoverStartToArtwork,30);
 }
 
 function pauseGame(){
@@ -1626,7 +1642,7 @@ function resumeGame(){
 }
 
 function startGame(){
- if(!cleanPlayerName(currentPlayer)){openRegistration();return;}
+ if(!cleanPlayerName(currentPlayer)||!currentPlayerToken){openRegistration();return;}
  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
  $('coverScreen').classList.add('hidden');
  stopResultMusic();
@@ -1644,28 +1660,36 @@ function startGame(){
 function endGame(){
  running=false;paused=false;pouring=false;stopLiquidSound();clearInterval(timer);cancelAnimationFrame(raf);stopMusic();
  $('pauseBtn').classList.add('hidden');$('pauseOverlay').classList.add('hidden');render();
- const rankPosition=saveScoreToRanking(currentPlayer,score);
  $('endPlayer').textContent=currentPlayer?'Jogador: '+currentPlayer:'';
- renderRanking('endRanking',lastRankingEntryId);
+
+ // O resultado é preparado, mas o ranking compartilhado aparece primeiro.
+ $('end').classList.add('hidden');
+ rankingFromEndGame=true;
+ $('rankingOverlay').classList.remove('hidden');
+ $('coverRanking').innerHTML='<div class="rankEmpty">Atualizando ranking geral...</div>';
+
+ let rankPosition=null,bestScore=score;
+ try{
+   const saved=await saveScoreToRanking(currentPlayer,score);
+   rankPosition=Number(saved.rankPosition)||null;
+   bestScore=Number(saved.bestScore);
+   if(!Number.isFinite(bestScore))bestScore=score;
+ }catch(err){
+   $('coverRanking').innerHTML='<div class="rankEmpty">Não foi possível registrar a pontuação. Verifique a conexão.</div>';
+ }
+
  if(score >= 1000){
    playWinMusic();
    $('end').querySelector('h2').textContent='PARABÉNS!!!';
-   $('result').innerHTML=`<strong style="font-size:1.35em">VOCÊ GANHOU UM BRINDE!!</strong><br><br>Você atingiu a meta de <b>1000 pontos</b>.<br>Pontuação final: <b>${score} pontos</b>.${rankPosition?'<span class="rankStatus">🏆 '+rankPosition+'º lugar no ranking!</span>':'<span class="rankStatus">Continue tentando para entrar no Top 10!</span>'}`;
+   $('result').innerHTML=`<strong style="font-size:1.35em">VOCÊ GANHOU UM BRINDE!!</strong><br><br>Você atingiu a meta de <b>1000 pontos</b>.<br>Pontuação desta partida: <b>${score} pontos</b>.<br>Melhor pontuação: <b>${bestScore} pontos</b>.${rankPosition&&rankPosition<=10?'<span class="rankStatus">🏆 '+rankPosition+'º lugar no ranking geral!</span>':''}`;
  } else {
    playLoseMusic();
    $('end').querySelector('h2').textContent='INFELIZMENTE NÃO ATINGIU O OBJETIVO!';
-   $('result').innerHTML=`Sua pontuação foi <b>${score} pontos</b>.<br>A meta era <b>1000 pontos</b>. Tente novamente!${rankPosition?'<span class="rankStatus">🏆 '+rankPosition+'º lugar no ranking!</span>':'<span class="rankStatus">Continue tentando para entrar no Top 10!</span>'}`;
+   $('result').innerHTML=`Sua pontuação foi <b>${score} pontos</b>.<br>A meta era <b>1000 pontos</b>.<br>Melhor pontuação: <b>${bestScore} pontos</b>.${rankPosition&&rankPosition<=10?'<span class="rankStatus">🏆 '+rankPosition+'º lugar no ranking geral!</span>':''}`;
  }
- $('end').classList.remove('hidden');
-
- // Mantém o resultado visível por 10 segundos.
- // Se ninguém iniciar outra partida, retorna automaticamente para a capa.
- if(autoReturnCoverTimer)clearTimeout(autoReturnCoverTimer);
- autoReturnCoverTimer=setTimeout(()=>{
-   autoReturnCoverTimer=null;
-   returnToCover();
- },10000);
+ await renderRanking('coverRanking',currentPlayer);
 }
+
 let dragging=false, dragStartY=0, lift=0, dragPointer=null;
 
 function applyBottleLift(){
@@ -1729,13 +1753,16 @@ function releaseBottle(e){
 }
 bottle.addEventListener('pointerup',releaseBottle);
 bottle.addEventListener('pointercancel',releaseBottle);
-$('startBtn').onclick=registerAndStart;$('againBtn').onclick=openRegistration;$('backBtn').onclick=returnToCover;
+$('startBtn').onclick=registerAndStart;$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
 $('startBackBtn').onclick=returnToCover;
 $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
 $('coverStart').onclick=openRegistration;
 $('coverRankingBtn').onclick=openRanking;$('closeRankingBtn').onclick=closeRanking;
 $('playerName').addEventListener('input',validatePlayerName);
 $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter'&&validatePlayerName())registerAndStart()});
+const coverArtV63=document.querySelector('.coverArt');
+if(coverArtV63){if(coverArtV63.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV63.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+setTimeout(alignCoverStartToArtwork,80);
 renderRanking('startRanking');renderRanking('coverRanking');
 render();
 </script>
