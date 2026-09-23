@@ -83,7 +83,7 @@ jobs:
       - name: Generate official PNG and adaptive Android icons
         run: |
           set -e
-          SRC="assets/app-icon.jpg"
+          SRC="assets/app-icon.png"
 
           declare -A LEGACY=( [mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192 )
           declare -A ADAPTIVE=( [mdpi]=108 [hdpi]=162 [xhdpi]=216 [xxhdpi]=324 [xxxhdpi]=432 )
