@@ -31,10 +31,40 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Install Android icon tools
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y imagemagick
+
+      - name: Correct cover start touch area
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path("www/index.html")
+          s = p.read_text(encoding="utf-8")
+
+          rule = (
+              ".coverStart{position:absolute;left:50%;bottom:18.9%;"
+              "transform:translateX(-50%);z-index:3;width:50%;height:6.6%;"
+              "border:0;border-radius:999px;background:rgba(255,255,255,0.001);"
+              "color:transparent;font-size:0;cursor:pointer;touch-action:manipulation;"
+              "-webkit-tap-highlight-color:transparent;appearance:none;-webkit-appearance:none}"
+          )
+
+          s, count = re.subn(r'\.coverStart\{[^}]*\}', rule, s, count=1)
+          if count != 1:
+              raise SystemExit("coverStart rule not found")
+
+          p.write_text(s, encoding="utf-8")
+          print("Cover start hitbox aligned with the visible INICIAR JOGO button.")
+          PY
+
       - name: Generate Android project
         run: npx cap add android
 
-      - name: Sync game into Android
+      - name: Sync corrected game into Android
         run: npx cap sync android
 
       - name: Apply official app name
@@ -50,18 +80,55 @@ jobs:
           p.write_text(s, encoding="utf-8")
           PY
 
-      - name: Apply official Android launcher icon
+      - name: Generate official PNG and adaptive Android icons
         run: |
           set -e
+          SRC="assets/app-icon.jpg"
+
+          declare -A LEGACY=( [mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192 )
+          declare -A ADAPTIVE=( [mdpi]=108 [hdpi]=162 [xhdpi]=216 [xxhdpi]=324 [xxxhdpi]=432 )
+
           for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
             dir="android/app/src/main/res/mipmap-$density"
             mkdir -p "$dir"
-            rm -f "$dir"/ic_launcher.* "$dir"/ic_launcher_round.*
-            cp assets/app-icon.jpg "$dir/ic_launcher.jpg"
-            cp assets/app-icon.jpg "$dir/ic_launcher_round.jpg"
+
+            rm -f "$dir"/ic_launcher.* "$dir"/ic_launcher_round.* "$dir"/ic_launcher_foreground.*
+
+            size="${LEGACY[$density]}"
+            fg="${ADAPTIVE[$density]}"
+            inner=$(( fg * 72 / 100 ))
+
+            convert "$SRC" -auto-orient -resize "${size}x${size}^" -gravity center -extent "${size}x${size}"               "$dir/ic_launcher.png"
+            cp "$dir/ic_launcher.png" "$dir/ic_launcher_round.png"
+
+            convert "$SRC" -auto-orient -resize "${inner}x${inner}^" -gravity center -extent "${inner}x${inner}"               -alpha set -background none -gravity center -extent "${fg}x${fg}"               "$dir/ic_launcher_foreground.png"
           done
-          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+
+          mkdir -p android/app/src/main/res/mipmap-anydpi-v26
+          mkdir -p android/app/src/main/res/values
+
+          cat > android/app/src/main/res/values/icon_colors.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="ic_launcher_background">#3B050A</color>
+          </resources>
+          EOF
+
+          cat > android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@color/ic_launcher_background"/>
+              <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+          </adaptive-icon>
+          EOF
+
+          cat > android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@color/ic_launcher_background"/>
+              <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+          </adaptive-icon>
+          EOF
 
       - name: Build installable debug APK
         run: |
@@ -88,4 +155,4 @@ jobs:
           gh release create apk-latest O-DESAFIO-VINHO-O-GAUCHO.apk \
             --target "$GITHUB_SHA" \
             --title "O DESAFIO VINHO O GAÚCHO — APK mais recente" \
-            --notes "APK Android instalável com novo nome e novo ícone oficial. Base do jogo: V52."
+            --notes "APK Android instalável com ícone PNG/Adaptive Icon e área de toque do botão INICIAR JOGO corrigida. Versão do jogo: V53."
