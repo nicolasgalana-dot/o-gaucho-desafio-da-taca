@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - ipanema-corte-certeiro-apk-v27
+  pull_request:
+    branches:
+      - ipanema-apk-build-base-v27
   workflow_dispatch:
 
 permissions:
