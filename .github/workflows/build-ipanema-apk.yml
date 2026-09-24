@@ -1,0 +1,59 @@
+name: Build Ipanema APK
+
+on:
+  push:
+    branches:
+      - ipanema-corte-certeiro-apk-v27
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle 8.10.2
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Android SDK 35
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Gerar ícone a partir da capa
+        shell: bash
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 tools/make_icon.py
+
+      - name: Compilar APK
+        shell: bash
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Preparar APK
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Desafio_Ipanema_Corte_Certeiro_V27.apk
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: Desafio_Ipanema_Corte_Certeiro_V27_APK
+          path: dist/Desafio_Ipanema_Corte_Certeiro_V27.apk
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,27 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.ipanema.desafiocortecerteiro'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.ipanema.desafiocortecerteiro'
+        minSdk 23
+        targetSdk 35
+        versionCode 27
+        versionName '27.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
