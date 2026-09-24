@@ -997,8 +997,7 @@ function showScoreFeedback(pts,side){
 function spawnPerfectConfetti(){
   const game=$('game') || document.body;
   const colors=['#ffd54a','#fff2a8','#8be267','#ffffff','#ff5b77','#7fe1ff'];
-  const count=34;
-  for(let i=0;i<count;i++){
+  const count=34;  for(let i=0;i<count;i++){
     const c=document.createElement('i');
     c.className='confettiPiece';
     c.style.background=colors[i%colors.length];
