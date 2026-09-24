@@ -1,1 +1,2 @@
 Build request for Desafio Ipanema - Corte Certeiro V27 APK.
+Retry with preinstalled Android SDK.
