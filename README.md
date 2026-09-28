@@ -17,6 +17,28 @@ A cada `push` na branch `main`, o workflow **Build Android APK** é executado. O
 
 Também é possível executar manualmente em **Actions → Build Android APK → Run workflow**.
 
+## Publicar o jogo no GitHub Pages
+
+Antes da primeira publicação, um administrador ou mantenedor deve abrir
+[Settings → Pages](https://github.com/nicolasgalana-dot/o-gaucho-desafio-da-taca/settings/pages)
+e selecionar **GitHub Actions** em **Build and deployment → Source**. O workflow já
+existe; não é necessário criar outro pelo modelo sugerido pelo GitHub.
+
+Depois, execute **Actions → Deploy web game to GitHub Pages → Run workflow**,
+selecionando `main`. Novos pushes em `main` que alterem `www/**` ou o próprio
+workflow também publicam o site automaticamente. O conteúdo publicado é a pasta
+`www`, incluindo `www/index.html`, sem etapa de build.
+
+O workflow usa `GITHUB_TOKEN` com `contents: read`, `pages: write` e
+`id-token: write` para publicar em um site Pages já habilitado. Essas permissões
+não permitem criar o site. Por isso, não use `enablement: true` com esse token.
+Se **Configure Pages** informar `Not Found`, confira a configuração inicial acima;
+aumentar `contents` para `write`, como no workflow de APK, não resolve essa falha.
+
+Valide que **Configure Pages**, **Upload game** e **Deploy** terminam com sucesso.
+O endereço após a publicação é
+<https://nicolasgalana-dot.github.io/o-gaucho-desafio-da-taca/>.
+
 ## Publicar o jogo na Vercel
 
 Importe o repositório `nicolasgalana-dot/o-gaucho-desafio-da-taca`, usando a branch `main` e mantendo o **Root Directory** na raiz do repositório (`.`).
