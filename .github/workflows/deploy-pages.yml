@@ -29,7 +29,8 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-- name: Upload game
+
+      - name: Upload game
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./www
