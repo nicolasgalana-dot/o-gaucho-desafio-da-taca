@@ -1282,7 +1282,7 @@ function startMusic(){
     if(audioCtx.state==='suspended')audioCtx.resume();
     if(!musicMaster){
       musicMaster=audioCtx.createGain();
-      musicMaster.gain.value=.28;
+      musicMaster.gain.value=.48;
       musicMaster.connect(audioCtx.destination);
     }
     stopMusic();
