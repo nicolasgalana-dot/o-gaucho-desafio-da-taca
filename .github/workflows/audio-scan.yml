@@ -1,4 +1,4 @@
-name: Scan test-player rules
+name: Allow TESTE replay
 
 on:
   push:
@@ -9,36 +9,47 @@ permissions:
   contents: write
 
 jobs:
-  scan:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Scan ranking and player-name logic
+      - name: Allow TESTE to repeat from cover
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
           p=Path("www/index.html")
-          s=p.read_text(encoding="utf-8",errors="ignore")
-          pos=s.rfind("<script")
-          tail=s[pos:] if pos>=0 else s
-          lines=tail.splitlines()
-          pat=re.compile(r'teste|validatePlayerName|playerName|ranking|rank|duplicate|duplic|jogar novamente|againBtn',re.I)
-          out=[]
-          for i,line in enumerate(lines):
-              if pat.search(line):
-                  a=max(0,i-5); b=min(len(lines),i+8)
-                  out.append(f"\n--- LINES {a+1}-{b} ---")
-                  out.extend(f"{j+1}: {lines[j]}" for j in range(a,b))
-          Path("test_player_scan.txt").write_text("\n".join(out),encoding="utf-8")
+          s=p.read_text(encoding="utf-8")
+          old="""    const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
+    if(alreadyUsed){
+      msg='Este nome já foi utilizado. Digite um nome diferente.';
+      valid=false;
+    }"""
+          new="""    const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
+    const isTestPlayer=(normalized==='TESTE');
+    if(alreadyUsed && !isTestPlayer){
+      msg='Este nome já foi utilizado. Digite um nome diferente.';
+      valid=false;
+    }"""
+          n=s.count(old)
+          if n != 1:
+              raise SystemExit(f"Expected exactly 1 player-name validation block, found {n}")
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding="utf-8")
+          print("TESTE is now allowed to repeat games from the cover.")
           PY
-      - name: Commit scan report
+      - name: Verify rule and arcade volume
+        shell: bash
+        run: |
+          grep -q "const isTestPlayer=(normalized==='TESTE');" www/index.html
+          grep -q "if(alreadyUsed && !isTestPlayer)" www/index.html
+          grep -q "musicMaster.gain.value=.42;" www/index.html
+      - name: Commit updated game
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add test_player_scan.txt
+          git add www/index.html
           git diff --cached --quiet && exit 0
-          git commit -m "chore: scan test-player rules"
+          git commit -m "feat: allow TESTE player to replay"
           git push
