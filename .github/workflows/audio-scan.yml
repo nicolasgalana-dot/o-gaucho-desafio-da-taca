@@ -1,4 +1,4 @@
-name: Increase arcade music volume
+name: Export updated HTML
 
 on:
   push:
@@ -6,34 +6,17 @@ on:
       - '.github/workflows/audio-scan.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  patch:
+  export:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Increase arcade music master volume
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path("www/index.html")
-          s=p.read_text(encoding="utf-8")
-          old="musicMaster.gain.value=.28;"
-          new="musicMaster.gain.value=.42;"
-          n=s.count(old)
-          if n != 1:
-              raise SystemExit(f"Expected exactly 1 arcade master-volume setting, found {n}")
-          p.write_text(s.replace(old,new,1),encoding="utf-8")
-          print("Arcade music master volume changed from 0.28 to 0.42")
-          PY
-      - name: Commit updated game
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add www/index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "feat: increase arcade music volume"
-          git push
+      - name: Prepare downloadable HTML
+        run: cp www/index.html O_GAUCHO_DESAFIO_DA_TACA_VOLUME_ARCADE_AUMENTADO.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: O_GAUCHO_HTML_ATUALIZADO
+          path: O_GAUCHO_DESAFIO_DA_TACA_VOLUME_ARCADE_AUMENTADO.html
+          retention-days: 1
