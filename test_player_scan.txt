@@ -1,0 +1,1184 @@
+
+--- LINES 1-12 ---
+1: <script>
+2: const $=id=>document.getElementById(id);
+3: let running=false,paused=false,pouring=false,fill=0,score=0,glasses=0,time=30,last=0,raf=null,timer=null,locked=false;
+4: 
+5: // ===== V61 — SESSÃO DO JOGADOR + RANKING =====
+6: const V55_RANK_KEY='ogaucho_v55_top10';
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+
+--- LINES 1-13 ---
+1: <script>
+2: const $=id=>document.getElementById(id);
+3: let running=false,paused=false,pouring=false,fill=0,score=0,glasses=0,time=30,last=0,raf=null,timer=null,locked=false;
+4: 
+5: // ===== V61 — SESSÃO DO JOGADOR + RANKING =====
+6: const V55_RANK_KEY='ogaucho_v55_top10';
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+
+--- LINES 3-15 ---
+3: let running=false,paused=false,pouring=false,fill=0,score=0,glasses=0,time=30,last=0,raf=null,timer=null,locked=false;
+4: 
+5: // ===== V61 — SESSÃO DO JOGADOR + RANKING =====
+6: const V55_RANK_KEY='ogaucho_v55_top10';
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+
+--- LINES 4-16 ---
+4: 
+5: // ===== V61 — SESSÃO DO JOGADOR + RANKING =====
+6: const V55_RANK_KEY='ogaucho_v55_top10';
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+
+--- LINES 5-17 ---
+5: // ===== V61 — SESSÃO DO JOGADOR + RANKING =====
+6: const V55_RANK_KEY='ogaucho_v55_top10';
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+17: }
+
+--- LINES 7-19 ---
+7: const V55_USED_NAMES_KEY='ogaucho_v55_used_names';
+8: let currentPlayerName='';
+9: let rankSavedThisGame=false;
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+17: }
+18: function loadUsedNames(){
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+
+--- LINES 10-22 ---
+10: let rankingFromEndGame=false;
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+17: }
+18: function loadUsedNames(){
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+20: }
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+
+--- LINES 11-23 ---
+11: 
+12: function normalizePlayerName(name){
+13:   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
+14: }
+15: function loadRank(){
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+17: }
+18: function loadUsedNames(){
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+20: }
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+23:   if(!n)return null;
+
+--- LINES 16-28 ---
+16:   try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+17: }
+18: function loadUsedNames(){
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+20: }
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+23:   if(!n)return null;
+24:   return loadRank().find(x=>normalizePlayerName(x.name)===n)||null;
+25: }
+26: function saveRankEntry(name,pts){
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+
+--- LINES 17-29 ---
+17: }
+18: function loadUsedNames(){
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+20: }
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+23:   if(!n)return null;
+24:   return loadRank().find(x=>normalizePlayerName(x.name)===n)||null;
+25: }
+26: function saveRankEntry(name,pts){
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+29:   const normalized=normalizePlayerName(clean);
+
+--- LINES 19-31 ---
+19:   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+20: }
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+23:   if(!n)return null;
+24:   return loadRank().find(x=>normalizePlayerName(x.name)===n)||null;
+25: }
+26: function saveRankEntry(name,pts){
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+29:   const normalized=normalizePlayerName(clean);
+30:   const newScore=Number(pts)||0;
+31:   const used=loadUsedNames();
+
+--- LINES 21-33 ---
+21: function getPlayerRankEntry(name){
+22:   const n=normalizePlayerName(name);
+23:   if(!n)return null;
+24:   return loadRank().find(x=>normalizePlayerName(x.name)===n)||null;
+25: }
+26: function saveRankEntry(name,pts){
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+29:   const normalized=normalizePlayerName(clean);
+30:   const newScore=Number(pts)||0;
+31:   const used=loadUsedNames();
+32:   if(!used.some(x=>normalizePlayerName(x)===normalized)){
+33:     used.push(clean);localStorage.setItem(V55_USED_NAMES_KEY,JSON.stringify(used));
+
+--- LINES 24-36 ---
+24:   return loadRank().find(x=>normalizePlayerName(x.name)===n)||null;
+25: }
+26: function saveRankEntry(name,pts){
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+29:   const normalized=normalizePlayerName(clean);
+30:   const newScore=Number(pts)||0;
+31:   const used=loadUsedNames();
+32:   if(!used.some(x=>normalizePlayerName(x)===normalized)){
+33:     used.push(clean);localStorage.setItem(V55_USED_NAMES_KEY,JSON.stringify(used));
+34:   }
+35: 
+36:   // V59 — o mesmo jogador pode jogar novamente sem duplicar o nome.
+
+--- LINES 27-39 ---
+27:   const clean=(name||'').trim().replace(/\s+/g,' ');
+28:   if(!clean)return;
+29:   const normalized=normalizePlayerName(clean);
+30:   const newScore=Number(pts)||0;
+31:   const used=loadUsedNames();
+32:   if(!used.some(x=>normalizePlayerName(x)===normalized)){
+33:     used.push(clean);localStorage.setItem(V55_USED_NAMES_KEY,JSON.stringify(used));
+34:   }
+35: 
+36:   // V59 — o mesmo jogador pode jogar novamente sem duplicar o nome.
+37:   // Mantemos uma única linha por jogador e preservamos a MELHOR pontuação dele.
+38:   const rank=loadRank();
+39:   const previous=rank.filter(x=>normalizePlayerName(x.name)===normalized)
+
+--- LINES 31-43 ---
+31:   const used=loadUsedNames();
+32:   if(!used.some(x=>normalizePlayerName(x)===normalized)){
+33:     used.push(clean);localStorage.setItem(V55_USED_NAMES_KEY,JSON.stringify(used));
+34:   }
+35: 
+36:   // V59 — o mesmo jogador pode jogar novamente sem duplicar o nome.
+37:   // Mantemos uma única linha por jogador e preservamos a MELHOR pontuação dele.
+38:   const rank=loadRank();
+39:   const previous=rank.filter(x=>normalizePlayerName(x.name)===normalized)
+40:                      .sort((a,b)=>(b.score||0)-(a.score||0))[0]||null;
+41:   const bestScore=previous?Math.max(Number(previous.score)||0,newScore):newScore;
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+
+--- LINES 33-45 ---
+33:     used.push(clean);localStorage.setItem(V55_USED_NAMES_KEY,JSON.stringify(used));
+34:   }
+35: 
+36:   // V59 — o mesmo jogador pode jogar novamente sem duplicar o nome.
+37:   // Mantemos uma única linha por jogador e preservamos a MELHOR pontuação dele.
+38:   const rank=loadRank();
+39:   const previous=rank.filter(x=>normalizePlayerName(x.name)===normalized)
+40:                      .sort((a,b)=>(b.score||0)-(a.score||0))[0]||null;
+41:   const bestScore=previous?Math.max(Number(previous.score)||0,newScore):newScore;
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+
+--- LINES 34-46 ---
+34:   }
+35: 
+36:   // V59 — o mesmo jogador pode jogar novamente sem duplicar o nome.
+37:   // Mantemos uma única linha por jogador e preservamos a MELHOR pontuação dele.
+38:   const rank=loadRank();
+39:   const previous=rank.filter(x=>normalizePlayerName(x.name)===normalized)
+40:                      .sort((a,b)=>(b.score||0)-(a.score||0))[0]||null;
+41:   const bestScore=previous?Math.max(Number(previous.score)||0,newScore):newScore;
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+
+--- LINES 37-49 ---
+37:   // Mantemos uma única linha por jogador e preservamos a MELHOR pontuação dele.
+38:   const rank=loadRank();
+39:   const previous=rank.filter(x=>normalizePlayerName(x.name)===normalized)
+40:                      .sort((a,b)=>(b.score||0)-(a.score||0))[0]||null;
+41:   const bestScore=previous?Math.max(Number(previous.score)||0,newScore):newScore;
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+
+--- LINES 40-52 ---
+40:                      .sort((a,b)=>(b.score||0)-(a.score||0))[0]||null;
+41:   const bestScore=previous?Math.max(Number(previous.score)||0,newScore):newScore;
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+
+--- LINES 42-54 ---
+42:   const filtered=rank.filter(x=>normalizePlayerName(x.name)!==normalized);
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+
+--- LINES 43-55 ---
+43:   filtered.push({name:clean,score:bestScore,at:(previous&&bestScore===Number(previous.score||0))?(previous.at||Date.now()):Date.now()});
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+
+--- LINES 44-56 ---
+44:   filtered.sort((a,b)=>(b.score||0)-(a.score||0) || (a.at||0)-(b.at||0));
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+
+--- LINES 45-57 ---
+45:   localStorage.setItem(V55_RANK_KEY,JSON.stringify(filtered.slice(0,10)));
+46: }
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+
+--- LINES 47-59 ---
+47: function renderRanking(){
+48:   const box=$('rankingContent'); if(!box)return;
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+
+--- LINES 49-61 ---
+49:   const rank=loadRank().slice(0,10);
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+
+--- LINES 50-62 ---
+50:   if(!rank.length){box.innerHTML='<div class="rankEmpty">Ainda não há pontuações registradas.</div>';return;}
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+
+--- LINES 51-63 ---
+51:   const esc=t=>String(t).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+
+--- LINES 52-64 ---
+52:   box.innerHTML='<table class="rankTable"><thead><tr><th>#</th><th>JOGADOR</th><th>PONTOS</th></tr></thead><tbody>'+rank.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${Number(r.score)||0}</td></tr>`).join('')+'</tbody></table>';
+53: }
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+
+--- LINES 54-66 ---
+54: function openRanking(){renderRanking();$('rankingOverlay').classList.remove('hidden')}
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+
+--- LINES 55-67 ---
+55: function closeRanking(){
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+67:   const input=$('playerNameInput'),err=$('playerNameError'),btn=$('confirmPlayerBtn');
+
+--- LINES 56-68 ---
+56:  $('rankingOverlay').classList.add('hidden');
+57:  // V60 — quando o ranking foi aberto automaticamente ao terminar a partida,
+58:  // o botão VOLTAR revela somente agora a tela de resultado com as opções
+59:  // JOGAR NOVAMENTE e VOLTAR.
+60:  if(rankingFromEndGame){
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+67:   const input=$('playerNameInput'),err=$('playerNameError'),btn=$('confirmPlayerBtn');
+68:   const raw=input.value.trim();const normalized=normalizePlayerName(raw);
+
+--- LINES 61-73 ---
+61:    rankingFromEndGame=false;
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+67:   const input=$('playerNameInput'),err=$('playerNameError'),btn=$('confirmPlayerBtn');
+68:   const raw=input.value.trim();const normalized=normalizePlayerName(raw);
+69:   let msg='',valid=true;
+70:   err.classList.remove('returningPlayer');
+71:   if(!normalized){
+72:     msg='Digite o nome do jogador.';valid=false;
+73:   }else if(normalized.length<2){
+
+--- LINES 62-74 ---
+62:    $('end').classList.remove('hidden');
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+67:   const input=$('playerNameInput'),err=$('playerNameError'),btn=$('confirmPlayerBtn');
+68:   const raw=input.value.trim();const normalized=normalizePlayerName(raw);
+69:   let msg='',valid=true;
+70:   err.classList.remove('returningPlayer');
+71:   if(!normalized){
+72:     msg='Digite o nome do jogador.';valid=false;
+73:   }else if(normalized.length<2){
+74:     msg='Digite pelo menos 2 caracteres.';valid=false;
+
+--- LINES 63-75 ---
+63:    return;
+64:  }
+65: }
+66: function validatePlayerName(){
+67:   const input=$('playerNameInput'),err=$('playerNameError'),btn=$('confirmPlayerBtn');
+68:   const raw=input.value.trim();const normalized=normalizePlayerName(raw);
+69:   let msg='',valid=true;
+70:   err.classList.remove('returningPlayer');
+71:   if(!normalized){
+72:     msg='Digite o nome do jogador.';valid=false;
+73:   }else if(normalized.length<2){
+74:     msg='Digite pelo menos 2 caracteres.';valid=false;
+75:   }else{
+
+--- LINES 72-84 ---
+72:     msg='Digite o nome do jogador.';valid=false;
+73:   }else if(normalized.length<2){
+74:     msg='Digite pelo menos 2 caracteres.';valid=false;
+75:   }else{
+76:     // V61 — em uma NOVA entrada pela capa, nomes já utilizados ficam bloqueados.
+77:     // O mesmo nome só pode continuar quando o próprio jogador toca em JOGAR NOVAMENTE,
+78:     // fluxo que reaproveita currentPlayerName e não passa por esta validação.
+79:     const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
+80:     if(alreadyUsed){
+81:       msg='Este nome já foi utilizado. Digite um nome diferente.';
+82:       valid=false;
+83:     }
+84:   }
+
+--- LINES 73-85 ---
+73:   }else if(normalized.length<2){
+74:     msg='Digite pelo menos 2 caracteres.';valid=false;
+75:   }else{
+76:     // V61 — em uma NOVA entrada pela capa, nomes já utilizados ficam bloqueados.
+77:     // O mesmo nome só pode continuar quando o próprio jogador toca em JOGAR NOVAMENTE,
+78:     // fluxo que reaproveita currentPlayerName e não passa por esta validação.
+79:     const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
+80:     if(alreadyUsed){
+81:       msg='Este nome já foi utilizado. Digite um nome diferente.';
+82:       valid=false;
+83:     }
+84:   }
+85:   err.textContent=msg;btn.disabled=!valid;return valid;
+
+--- LINES 74-86 ---
+74:     msg='Digite pelo menos 2 caracteres.';valid=false;
+75:   }else{
+76:     // V61 — em uma NOVA entrada pela capa, nomes já utilizados ficam bloqueados.
+77:     // O mesmo nome só pode continuar quando o próprio jogador toca em JOGAR NOVAMENTE,
+78:     // fluxo que reaproveita currentPlayerName e não passa por esta validação.
+79:     const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
+80:     if(alreadyUsed){
+81:       msg='Este nome já foi utilizado. Digite um nome diferente.';
+82:       valid=false;
+83:     }
+84:   }
+85:   err.textContent=msg;btn.disabled=!valid;return valid;
+86: }
+
+--- LINES 82-94 ---
+82:       valid=false;
+83:     }
+84:   }
+85:   err.textContent=msg;btn.disabled=!valid;return valid;
+86: }
+87: function requestPlayerName(reuseCurrent=false){
+88:   if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+89:   $('end').classList.add('hidden');
+90:   const input=$('playerNameInput');
+91:   input.value=(reuseCurrent&&currentPlayerName)?currentPlayerName:'';
+92:   $('playerNameError').textContent='';$('playerNameError').classList.remove('returningPlayer');
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+
+--- LINES 85-97 ---
+85:   err.textContent=msg;btn.disabled=!valid;return valid;
+86: }
+87: function requestPlayerName(reuseCurrent=false){
+88:   if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+89:   $('end').classList.add('hidden');
+90:   const input=$('playerNameInput');
+91:   input.value=(reuseCurrent&&currentPlayerName)?currentPlayerName:'';
+92:   $('playerNameError').textContent='';$('playerNameError').classList.remove('returningPlayer');
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+
+--- LINES 86-98 ---
+86: }
+87: function requestPlayerName(reuseCurrent=false){
+88:   if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+89:   $('end').classList.add('hidden');
+90:   const input=$('playerNameInput');
+91:   input.value=(reuseCurrent&&currentPlayerName)?currentPlayerName:'';
+92:   $('playerNameError').textContent='';$('playerNameError').classList.remove('returningPlayer');
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+
+--- LINES 87-99 ---
+87: function requestPlayerName(reuseCurrent=false){
+88:   if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+89:   $('end').classList.add('hidden');
+90:   const input=$('playerNameInput');
+91:   input.value=(reuseCurrent&&currentPlayerName)?currentPlayerName:'';
+92:   $('playerNameError').textContent='';$('playerNameError').classList.remove('returningPlayer');
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+
+--- LINES 90-102 ---
+90:   const input=$('playerNameInput');
+91:   input.value=(reuseCurrent&&currentPlayerName)?currentPlayerName:'';
+92:   $('playerNameError').textContent='';$('playerNameError').classList.remove('returningPlayer');
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+100:   if(!validatePlayerName())return;
+101:   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
+102:   $('playerOverlay').classList.add('hidden');
+
+--- LINES 93-105 ---
+93:   $('confirmPlayerBtn').disabled=!input.value.trim();
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+100:   if(!validatePlayerName())return;
+101:   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
+102:   $('playerOverlay').classList.add('hidden');
+103:   startGame();
+104: }
+105: function updatePlayerBadge(){
+
+--- LINES 94-106 ---
+94:   $('playerOverlay').classList.remove('hidden');
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+100:   if(!validatePlayerName())return;
+101:   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
+102:   $('playerOverlay').classList.add('hidden');
+103:   startGame();
+104: }
+105: function updatePlayerBadge(){
+106:   const b=$('currentPlayerBadge');if(!b)return;
+
+--- LINES 95-107 ---
+95:   if(input.value.trim())validatePlayerName();
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+100:   if(!validatePlayerName())return;
+101:   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
+102:   $('playerOverlay').classList.add('hidden');
+103:   startGame();
+104: }
+105: function updatePlayerBadge(){
+106:   const b=$('currentPlayerBadge');if(!b)return;
+107:   if(currentPlayerName){b.textContent='JOGADOR: '+currentPlayerName.toUpperCase();b.classList.remove('hidden')}
+
+--- LINES 96-108 ---
+96:   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
+97: }
+98: function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+99: function confirmPlayerName(){
+100:   if(!validatePlayerName())return;
+101:   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
+102:   $('playerOverlay').classList.add('hidden');
+103:   startGame();
+104: }
+105: function updatePlayerBadge(){
+106:   const b=$('currentPlayerBadge');if(!b)return;
+107:   if(currentPlayerName){b.textContent='JOGADOR: '+currentPlayerName.toUpperCase();b.classList.remove('hidden')}
+108:   else b.classList.add('hidden');
+
+--- LINES 102-114 ---
+102:   $('playerOverlay').classList.add('hidden');
+103:   startGame();
+104: }
+105: function updatePlayerBadge(){
+106:   const b=$('currentPlayerBadge');if(!b)return;
+107:   if(currentPlayerName){b.textContent='JOGADOR: '+currentPlayerName.toUpperCase();b.classList.remove('hidden')}
+108:   else b.classList.add('hidden');
+109: }
+110: function alignCoverStartToArtwork(){
+111:   const cover=$('coverScreen'),img=cover&&cover.querySelector('.coverArt'),btn=$('coverStart');
+112:   if(!cover||!img||!btn)return;
+113:   const cw=cover.clientWidth,ch=cover.clientHeight,iw=img.naturalWidth||944,ih=img.naturalHeight||1664;
+114:   if(!cw||!ch||!iw||!ih)return;
+
+--- LINES 985-997 ---
+985:   }
+986: }
+987: // ===== FIM DO SOM DE LÍQUIDO =====
+988: 
+989: 
+990: // V57 — ranking automático ao final + pause + acerto perfeito + som arcade.
+991: let autoReturnCoverTimer=null;
+992: let autoRankingTimer=null;
+993: 
+994: function startCountdownTimer(){
+995:  clearInterval(timer);
+996:  timer=setInterval(()=>{
+997:    if(paused||!running)return;
+
+--- LINES 987-999 ---
+987: // ===== FIM DO SOM DE LÍQUIDO =====
+988: 
+989: 
+990: // V57 — ranking automático ao final + pause + acerto perfeito + som arcade.
+991: let autoReturnCoverTimer=null;
+992: let autoRankingTimer=null;
+993: 
+994: function startCountdownTimer(){
+995:  clearInterval(timer);
+996:  timer=setInterval(()=>{
+997:    if(paused||!running)return;
+998:    time--;
+999:    $('time').textContent=time;
+
+--- LINES 1001-1013 ---
+1001:    if(time<=0)endGame();
+1002:  },1000);
+1003: }
+1004: 
+1005: function returnToCover(){
+1006:  rankingFromEndGame=false;
+1007:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1008:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1009:  $('rankingOverlay').classList.add('hidden');
+1010:  running=false;paused=false;pouring=false;locked=false;dragging=false;last=0;
+1011:  clearInterval(timer);
+1012:  cancelAnimationFrame(raf);
+1013:  stopMusic();
+
+--- LINES 1003-1015 ---
+1003: }
+1004: 
+1005: function returnToCover(){
+1006:  rankingFromEndGame=false;
+1007:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1008:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1009:  $('rankingOverlay').classList.add('hidden');
+1010:  running=false;paused=false;pouring=false;locked=false;dragging=false;last=0;
+1011:  clearInterval(timer);
+1012:  cancelAnimationFrame(raf);
+1013:  stopMusic();
+1014:  stopResultMusic();
+1015:  stopLiquidSound();
+
+--- LINES 1004-1016 ---
+1004: 
+1005: function returnToCover(){
+1006:  rankingFromEndGame=false;
+1007:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1008:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1009:  $('rankingOverlay').classList.add('hidden');
+1010:  running=false;paused=false;pouring=false;locked=false;dragging=false;last=0;
+1011:  clearInterval(timer);
+1012:  cancelAnimationFrame(raf);
+1013:  stopMusic();
+1014:  stopResultMusic();
+1015:  stopLiquidSound();
+1016:  wine.classList.remove('active');
+
+--- LINES 1019-1031 ---
+1019:  $('start').classList.add('hidden');
+1020:  $('end').classList.add('hidden');
+1021:  $('pauseOverlay').classList.add('hidden');
+1022:  $('pauseBtn').classList.add('hidden');
+1023:  $('coverScreen').classList.remove('hidden');
+1024:  currentPlayerName='';updatePlayerBadge();setTimeout(alignCoverStartToArtwork,30);
+1025: }
+1026: 
+1027: function pauseGame(){
+1028:  if(!running||paused)return;
+1029:  paused=true;
+1030:  clearInterval(timer);
+1031:  cancelAnimationFrame(raf);
+
+--- LINES 1058-1070 ---
+1058:  raf=requestAnimationFrame(loop);
+1059: }
+1060: 
+1061: function startGame(){
+1062:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1063:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1064:  $('rankingOverlay').classList.add('hidden');
+1065:  rankSavedThisGame=false;updatePlayerBadge();
+1066:  $('coverScreen').classList.add('hidden');
+1067:  stopResultMusic();
+1068:  stopLiquidSound();
+1069:  score=0;glasses=0;time=30;fill=0;locked=false;paused=false;pouring=false;last=0;running=true;lift=0;dragging=false;bottle.style.left='';bottle.style.top='';bottle.style.transform='';
+1070:  $('score').textContent=0;$('glasses').textContent=0;$('time').textContent=30;
+
+--- LINES 1059-1071 ---
+1059: }
+1060: 
+1061: function startGame(){
+1062:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1063:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1064:  $('rankingOverlay').classList.add('hidden');
+1065:  rankSavedThisGame=false;updatePlayerBadge();
+1066:  $('coverScreen').classList.add('hidden');
+1067:  stopResultMusic();
+1068:  stopLiquidSound();
+1069:  score=0;glasses=0;time=30;fill=0;locked=false;paused=false;pouring=false;last=0;running=true;lift=0;dragging=false;bottle.style.left='';bottle.style.top='';bottle.style.transform='';
+1070:  $('score').textContent=0;$('glasses').textContent=0;$('time').textContent=30;
+1071:  $('start').classList.add('hidden');$('end').classList.add('hidden');$('pauseOverlay').classList.add('hidden');
+
+--- LINES 1060-1072 ---
+1060: 
+1061: function startGame(){
+1062:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1063:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1064:  $('rankingOverlay').classList.add('hidden');
+1065:  rankSavedThisGame=false;updatePlayerBadge();
+1066:  $('coverScreen').classList.add('hidden');
+1067:  stopResultMusic();
+1068:  stopLiquidSound();
+1069:  score=0;glasses=0;time=30;fill=0;locked=false;paused=false;pouring=false;last=0;running=true;lift=0;dragging=false;bottle.style.left='';bottle.style.top='';bottle.style.transform='';
+1070:  $('score').textContent=0;$('glasses').textContent=0;$('time').textContent=30;
+1071:  $('start').classList.add('hidden');$('end').classList.add('hidden');$('pauseOverlay').classList.add('hidden');
+1072:  $('pauseBtn').classList.remove('hidden');
+
+--- LINES 1076-1088 ---
+1076:  startCountdownTimer();
+1077:  cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+1078: }
+1079: function endGame(){
+1080:  running=false;paused=false;pouring=false;stopLiquidSound();clearInterval(timer);cancelAnimationFrame(raf);stopMusic();
+1081:  if(!rankSavedThisGame && currentPlayerName){saveRankEntry(currentPlayerName,score);rankSavedThisGame=true;}
+1082:  $('pauseBtn').classList.add('hidden');$('pauseOverlay').classList.add('hidden');render();
+1083:  if(score >= 1000){
+1084:    playWinMusic();
+1085:    $('end').querySelector('h2').textContent='PARABÉNS!!!';
+1086:    $('result').innerHTML=`<strong style="font-size:1.35em">VOCÊ GANHOU UM BRINDE!!</strong><br><br>Você atingiu a meta de <b>1000 pontos</b>.<br>Pontuação final: <b>${score} pontos</b>.`;
+1087:  } else {
+1088:    playLoseMusic();
+
+--- LINES 1088-1100 ---
+1088:    playLoseMusic();
+1089:    $('end').querySelector('h2').textContent='INFELIZMENTE NÃO ATINGIU O OBJETIVO!';
+1090:    $('result').innerHTML=`Sua pontuação foi <b>${score} pontos</b>.<br>A meta era <b>1000 pontos</b>. Tente novamente!`;
+1091:  }
+1092:  // V60 — ao finalizar, o resultado fica preparado, porém escondido.
+1093:  // O ranking abre IMEDIATAMENTE. Somente após tocar em VOLTAR no ranking
+1094:  // é que aparecem JOGAR NOVAMENTE e VOLTAR.
+1095:  $('end').classList.add('hidden');
+1096:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1097:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1098:  rankingFromEndGame=true;
+1099:  openRanking();
+1100: }
+
+--- LINES 1089-1101 ---
+1089:    $('end').querySelector('h2').textContent='INFELIZMENTE NÃO ATINGIU O OBJETIVO!';
+1090:    $('result').innerHTML=`Sua pontuação foi <b>${score} pontos</b>.<br>A meta era <b>1000 pontos</b>. Tente novamente!`;
+1091:  }
+1092:  // V60 — ao finalizar, o resultado fica preparado, porém escondido.
+1093:  // O ranking abre IMEDIATAMENTE. Somente após tocar em VOLTAR no ranking
+1094:  // é que aparecem JOGAR NOVAMENTE e VOLTAR.
+1095:  $('end').classList.add('hidden');
+1096:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1097:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1098:  rankingFromEndGame=true;
+1099:  openRanking();
+1100: }
+1101: let dragging=false, dragStartY=0, lift=0, dragPointer=null;
+
+--- LINES 1092-1104 ---
+1092:  // V60 — ao finalizar, o resultado fica preparado, porém escondido.
+1093:  // O ranking abre IMEDIATAMENTE. Somente após tocar em VOLTAR no ranking
+1094:  // é que aparecem JOGAR NOVAMENTE e VOLTAR.
+1095:  $('end').classList.add('hidden');
+1096:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1097:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1098:  rankingFromEndGame=true;
+1099:  openRanking();
+1100: }
+1101: let dragging=false, dragStartY=0, lift=0, dragPointer=null;
+1102: 
+1103: function applyBottleLift(){
+1104:   // 0 = repouso; 1 = inclinação máxima. Nos vídeos o vinho só vence a borda
+
+--- LINES 1093-1105 ---
+1093:  // O ranking abre IMEDIATAMENTE. Somente após tocar em VOLTAR no ranking
+1094:  // é que aparecem JOGAR NOVAMENTE e VOLTAR.
+1095:  $('end').classList.add('hidden');
+1096:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1097:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1098:  rankingFromEndGame=true;
+1099:  openRanking();
+1100: }
+1101: let dragging=false, dragStartY=0, lift=0, dragPointer=null;
+1102: 
+1103: function applyBottleLift(){
+1104:   // 0 = repouso; 1 = inclinação máxima. Nos vídeos o vinho só vence a borda
+1105:   // do gargalo quando a garrafa está próxima da horizontal (≈88°).
+
+--- LINES 1094-1106 ---
+1094:  // é que aparecem JOGAR NOVAMENTE e VOLTAR.
+1095:  $('end').classList.add('hidden');
+1096:  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1097:  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1098:  rankingFromEndGame=true;
+1099:  openRanking();
+1100: }
+1101: let dragging=false, dragStartY=0, lift=0, dragPointer=null;
+1102: 
+1103: function applyBottleLift(){
+1104:   // 0 = repouso; 1 = inclinação máxima. Nos vídeos o vinho só vence a borda
+1105:   // do gargalo quando a garrafa está próxima da horizontal (≈88°).
+1106:   const angle=8 + lift*104;
+
+--- LINES 1160-1172 ---
+1160:   if(hadPour && !locked) judge();
+1161: }
+1162: bottle.addEventListener('pointerup',releaseBottle);
+1163: bottle.addEventListener('pointercancel',releaseBottle);
+1164: function replaySamePlayer(){
+1165:   rankingFromEndGame=false;
+1166:   // V61 — JOGAR NOVAMENTE reinicia imediatamente com o MESMO jogador da sessão atual.
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+
+--- LINES 1161-1173 ---
+1161: }
+1162: bottle.addEventListener('pointerup',releaseBottle);
+1163: bottle.addEventListener('pointercancel',releaseBottle);
+1164: function replaySamePlayer(){
+1165:   rankingFromEndGame=false;
+1166:   // V61 — JOGAR NOVAMENTE reinicia imediatamente com o MESMO jogador da sessão atual.
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+
+--- LINES 1162-1174 ---
+1162: bottle.addEventListener('pointerup',releaseBottle);
+1163: bottle.addEventListener('pointercancel',releaseBottle);
+1164: function replaySamePlayer(){
+1165:   rankingFromEndGame=false;
+1166:   // V61 — JOGAR NOVAMENTE reinicia imediatamente com o MESMO jogador da sessão atual.
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+1174:     startGame();
+
+--- LINES 1164-1176 ---
+1164: function replaySamePlayer(){
+1165:   rankingFromEndGame=false;
+1166:   // V61 — JOGAR NOVAMENTE reinicia imediatamente com o MESMO jogador da sessão atual.
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+1174:     startGame();
+1175:   }else{
+1176:     requestPlayerName(false);
+
+--- LINES 1166-1178 ---
+1166:   // V61 — JOGAR NOVAMENTE reinicia imediatamente com o MESMO jogador da sessão atual.
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+1174:     startGame();
+1175:   }else{
+1176:     requestPlayerName(false);
+1177:   }
+1178: }
+
+--- LINES 1167-1179 ---
+1167:   // Não abre a tela de nome. Se o jogador voltar à capa, currentPlayerName é limpo e
+1168:   // o nome antigo passa a ficar bloqueado para uma nova entrada.
+1169:   if(currentPlayerName){
+1170:     if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+1174:     startGame();
+1175:   }else{
+1176:     requestPlayerName(false);
+1177:   }
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+
+--- LINES 1171-1183 ---
+1171:     if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
+1172:     $('rankingOverlay').classList.add('hidden');
+1173:     $('playerOverlay').classList.add('hidden');
+1174:     startGame();
+1175:   }else{
+1176:     requestPlayerName(false);
+1177:   }
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+
+--- LINES 1174-1186 ---
+1174:     startGame();
+1175:   }else{
+1176:     requestPlayerName(false);
+1177:   }
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+
+--- LINES 1176-1188 ---
+1176:     requestPlayerName(false);
+1177:   }
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+
+--- LINES 1177-1189 ---
+1177:   }
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+
+--- LINES 1178-1190 ---
+1178: }
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+
+--- LINES 1179-1191 ---
+1179: $('startBtn').onclick=()=>requestPlayerName(false);$('againBtn').onclick=replaySamePlayer;$('backBtn').onclick=returnToCover;
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+
+--- LINES 1180-1192 ---
+1180: $('pauseBtn').onclick=pauseGame;$('resumeBtn').onclick=resumeGame;$('pauseBackBtn').onclick=returnToCover;
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+1192: setTimeout(alignCoverStartToArtwork,80);
+
+--- LINES 1181-1193 ---
+1181: $('coverStart').onclick=()=>requestPlayerName(false);
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+1192: setTimeout(alignCoverStartToArtwork,80);
+1193: render();
+
+--- LINES 1182-1194 ---
+1182: $('coverRankingBtn').onclick=openRanking;
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+1192: setTimeout(alignCoverStartToArtwork,80);
+1193: render();
+1194: </script>
+
+--- LINES 1183-1195 ---
+1183: $('closeRankingBtn').onclick=closeRanking;
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+1192: setTimeout(alignCoverStartToArtwork,80);
+1193: render();
+1194: </script>
+1195: </body>
+
+--- LINES 1184-1196 ---
+1184: $('cancelPlayerBtn').onclick=cancelPlayerName;
+1185: $('confirmPlayerBtn').onclick=confirmPlayerName;
+1186: $('playerNameInput').addEventListener('input',validatePlayerName);
+1187: $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
+1188: $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
+1189: $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOverlay'))cancelPlayerName();});
+1190: const coverArtV55=document.querySelector('.coverArt');
+1191: if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
+1192: setTimeout(alignCoverStartToArtwork,80);
+1193: render();
+1194: </script>
+1195: </body>
+1196: </html>
