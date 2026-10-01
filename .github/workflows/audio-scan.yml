@@ -13,36 +13,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Scan audio settings
+      - name: Scan audio settings in game script
         shell: bash
         run: |
           python - <<'PY'
           import re, pathlib
-          files = [pathlib.Path("www/index.html"), pathlib.Path("index.html")]
-          terms = re.compile(r'volume|gain|arcade|music|audio|bgm|sound|tick|tic', re.I)
-          out = []
-          for p in files:
-              if not p.exists():
-                  continue
-              s = p.read_text(encoding="utf-8", errors="ignore")
-              out.append(f"FILE: {p} SIZE={len(s)}")
-              count = 0
-              for m in terms.finditer(s):
-                  a = max(0, m.start()-260); b = min(len(s), m.end()+360)
-                  snippet = s[a:b].replace("\n","\\n").replace("\r","")
-                  out.append(f"\n--- MATCH {count+1}: {m.group(0)} @ {m.start()} ---\n{snippet}")
-                  count += 1
-                  if count >= 250:
-                      break
-              out.append(f"\nTOTAL_SHOWN={count}\n")
-          pathlib.Path("audio_scan.txt").write_text("\n".join(out), encoding="utf-8")
+          out=[]
+          for fn in ["www/index.html","index.html"]:
+              p=pathlib.Path(fn)
+              if not p.exists(): continue
+              s=p.read_text(encoding="utf-8",errors="ignore")
+              pos=s.rfind("<script")
+              tail=s[pos:] if pos>=0 else s[-180000:]
+              lines=tail.splitlines()
+              out.append(f"FILE: {fn} SCRIPT_START={pos} SCRIPT_LEN={len(tail)}")
+              pat=re.compile(r'audio|music|arcade|bgm|gain|volume|tick|tic|victory|win|lose|game.?over|sound',re.I)
+              shown=set()
+              for i,line in enumerate(lines):
+                  if pat.search(line):
+                      a=max(0,i-3); b=min(len(lines),i+4)
+                      key=(a,b)
+                      if key in shown: continue
+                      shown.add(key)
+                      out.append(f"\n--- LINES {a+1}-{b} ---")
+                      out.extend(f"{j+1}: {lines[j]}" for j in range(a,b))
+              out.append(f"\nMATCH_BLOCKS={len(shown)}\n")
+          pathlib.Path("audio_scan_tail.txt").write_text("\n".join(out),encoding="utf-8")
           PY
       - name: Commit scan report
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add audio_scan.txt
+          git add audio_scan_tail.txt
           git diff --cached --quiet && exit 0
-          git commit -m "chore: scan audio settings"
+          git commit -m "chore: scan game audio controls"
           git push
