@@ -1,4 +1,4 @@
-name: Allow TESTE replay
+name: Export updated HTML
 
 on:
   push:
@@ -6,38 +6,17 @@ on:
       - '.github/workflows/audio-scan.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  patch:
+  export:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch TESTE validation
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path("www/index.html")
-          s=p.read_text(encoding="utf-8")
-          old="    if(alreadyUsed){"
-          new="    if(alreadyUsed && normalized!=='TESTE'){"
-          n=s.count(old)
-          if n != 1:
-              raise SystemExit(f"Expected exactly 1 validation condition, found {n}")
-          p.write_text(s.replace(old,new,1),encoding="utf-8")
-          PY
-      - name: Verify preserved settings
-        shell: bash
-        run: |
-          grep -Fq "if(alreadyUsed && normalized!=='TESTE')" www/index.html
-          grep -Fq "musicMaster.gain.value=.42;" www/index.html
-      - name: Commit game update
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add www/index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "feat: allow TESTE player to replay"
-          git push
+      - name: Prepare downloadable HTML
+        run: cp www/index.html O_GAUCHO_DESAFIO_DA_TACA_TESTE_LIBERADO.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: O_GAUCHO_TESTE_LIBERADO
+          path: O_GAUCHO_DESAFIO_DA_TACA_TESTE_LIBERADO.html
+          retention-days: 1
