@@ -1,4 +1,4 @@
-name: Export updated HTML
+name: Scan test-player rules
 
 on:
   push:
@@ -6,17 +6,39 @@ on:
       - '.github/workflows/audio-scan.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export:
+  scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare downloadable HTML
-        run: cp www/index.html O_GAUCHO_DESAFIO_DA_TACA_VOLUME_ARCADE_AUMENTADO.html
-      - uses: actions/upload-artifact@v4
-        with:
-          name: O_GAUCHO_HTML_ATUALIZADO
-          path: O_GAUCHO_DESAFIO_DA_TACA_VOLUME_ARCADE_AUMENTADO.html
-          retention-days: 1
+      - name: Scan ranking and player-name logic
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("www/index.html")
+          s=p.read_text(encoding="utf-8",errors="ignore")
+          pos=s.rfind("<script")
+          tail=s[pos:] if pos>=0 else s
+          lines=tail.splitlines()
+          pat=re.compile(r'teste|validatePlayerName|playerName|ranking|rank|duplicate|duplic|jogar novamente|againBtn',re.I)
+          out=[]
+          for i,line in enumerate(lines):
+              if pat.search(line):
+                  a=max(0,i-5); b=min(len(lines),i+8)
+                  out.append(f"\n--- LINES {a+1}-{b} ---")
+                  out.extend(f"{j+1}: {lines[j]}" for j in range(a,b))
+          Path("test_player_scan.txt").write_text("\n".join(out),encoding="utf-8")
+          PY
+      - name: Commit scan report
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add test_player_scan.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: scan test-player rules"
+          git push
