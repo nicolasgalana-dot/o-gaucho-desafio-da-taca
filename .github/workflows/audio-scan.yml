@@ -18,95 +18,11 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import base64
           p = Path("www/index.html")
           s = p.read_text(encoding="utf-8")
           marker = "AJUSTE ESPECÍFICO PARA PC / NOTEBOOK"
-          css = r"""  /* ===== AJUSTE ESPECÍFICO PARA PC / NOTEBOOK =====
-     Mantém o jogo em proporção vertical semelhante ao celular,
-     centralizado na tela, sem esticar garrafas, taças ou capa. */
-  @media (min-width:700px){
-    html,body{
-      background:#130d0a;
-    }
-    body{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    #app{
-      width:min(100vw,calc(100vh * 0.5628));
-      height:100vh;
-      max-width:620px;
-      margin:0 auto;
-      box-shadow:0 0 42px rgba(0,0,0,.72);
-    }
-
-    /* A capa passa a ocupar exatamente a área vertical do jogo. */
-    #cover img{object-fit:cover}
-
-    /* Reaplica no PC as proporções visuais equivalentes ao layout móvel. */
-    :root{--glass-w:82px;--bowl-h:150px}
-    .topbar{width:min(100%,620px);padding-top:calc(10px + env(safe-area-inset-top))}
-    .infoRow{width:min(100%,620px);gap:8px;padding:0 10px}
-    .infoCard{min-height:66px;padding:8px 6px}
-    .infoCard .statLabel{font-size:10px}
-    .infoCard .statValue{font-size:21px}
-
-    .bottleLine{
-      top:182px;
-      width:min(100%,520px);
-    }
-    .bgBottleSlot{height:448px}
-    .bgBottle{
-      height:430px !important;
-      max-height:430px !important;
-      width:auto !important;
-      max-width:98%;
-    }
-    .bgBottleName{
-      font-size:18px;
-      bottom:-10px;
-      white-space:normal;
-      max-width:120px;
-      line-height:1.02;
-    }
-
-    #boardWrap{padding:546px 4px 16px}
-    #board{
-      width:min(100%,520px);
-      gap:6px 3px;
-    }
-    .slot{height:calc(var(--bowl-h) + 60px)}
-  }
-
-  /* Notebook mais baixo (ex.: 1366x768): reduz tudo de forma proporcional. */
-  @media (min-width:700px) and (max-height:850px){
-    :root{--glass-w:70px;--bowl-h:128px}
-    .roundBtn{width:46px;height:46px}
-    .infoRow{margin-top:7px}
-    .infoCard{min-height:58px;padding:6px 5px}
-    .infoCard .statValue{font-size:19px}
-    .bottleLine{top:166px;width:min(100%,470px)}
-    .bgBottleSlot{height:364px}
-    .bgBottle{height:350px !important;max-height:350px !important}
-    .bgBottleName{font-size:16px;bottom:-7px}
-    #boardWrap{padding:432px 4px 12px}
-    #board{width:min(100%,470px);gap:5px 3px}
-    .slot{height:calc(var(--bowl-h) + 54px)}
-  }
-
-  /* Telas Full HD / monitores altos: aproveita melhor a altura sem distorcer. */
-  @media (min-width:1000px) and (min-height:900px){
-    :root{--glass-w:88px;--bowl-h:162px}
-    .bottleLine{top:198px;width:min(100%,560px)}
-    .bgBottleSlot{height:492px}
-    .bgBottle{height:474px !important;max-height:474px !important}
-    .bgBottleName{font-size:20px;bottom:-9px;max-width:130px}
-    #boardWrap{padding:596px 6px 18px}
-    #board{width:min(100%,560px);gap:8px 5px}
-    .slot{height:calc(var(--bowl-h) + 62px)}
-  }
-"""
+          css = base64.b64decode("ICAvKiA9PT09PSBBSlVTVEUgRVNQRUPDjUZJQ08gUEFSQSBQQyAvIE5PVEVCT09LID09PT09CiAgICAgTWFudMOpbSBvIGpvZ28gZW0gcHJvcG9yw6fDo28gdmVydGljYWwgc2VtZWxoYW50ZSBhbyBjZWx1bGFyLAogICAgIGNlbnRyYWxpemFkbyBuYSB0ZWxhLCBzZW0gZXN0aWNhciBnYXJyYWZhcywgdGHDp2FzIG91IGNhcGEuICovCiAgQG1lZGlhIChtaW4td2lkdGg6NzAwcHgpewogICAgaHRtbCxib2R5ewogICAgICBiYWNrZ3JvdW5kOiMxMzBkMGE7CiAgICB9CiAgICBib2R5ewogICAgICBkaXNwbGF5OmZsZXg7CiAgICAgIGFsaWduLWl0ZW1zOmNlbnRlcjsKICAgICAganVzdGlmeS1jb250ZW50OmNlbnRlcjsKICAgIH0KICAgICNhcHB7CiAgICAgIHdpZHRoOm1pbigxMDB2dyxjYWxjKDEwMHZoICogMC41NjI4KSk7CiAgICAgIGhlaWdodDoxMDB2aDsKICAgICAgbWF4LXdpZHRoOjYyMHB4OwogICAgICBtYXJnaW46MCBhdXRvOwogICAgICBib3gtc2hhZG93OjAgMCA0MnB4IHJnYmEoMCwwLDAsLjcyKTsKICAgIH0KCiAgICAvKiBBIGNhcGEgcGFzc2EgYSBvY3VwYXIgZXhhdGFtZW50ZSBhIMOhcmVhIHZlcnRpY2FsIGRvIGpvZ28uICovCiAgICAjY292ZXIgaW1ne29iamVjdC1maXQ6Y292ZXJ9CgogICAgLyogUmVhcGxpY2Egbm8gUEMgYXMgcHJvcG9yw6fDtWVzIHZpc3VhaXMgZXF1aXZhbGVudGVzIGFvIGxheW91dCBtw7N2ZWwuICovCiAgICA6cm9vdHstLWdsYXNzLXc6ODJweDstLWJvd2wtaDoxNTBweH0KICAgIC50b3BiYXJ7d2lkdGg6bWluKDEwMCUsNjIwcHgpO3BhZGRpbmctdG9wOmNhbGMoMTBweCArIGVudihzYWZlLWFyZWEtaW5zZXQtdG9wKSl9CiAgICAuaW5mb1Jvd3t3aWR0aDptaW4oMTAwJSw2MjBweCk7Z2FwOjhweDtwYWRkaW5nOjAgMTBweH0KICAgIC5pbmZvQ2FyZHttaW4taGVpZ2h0OjY2cHg7cGFkZGluZzo4cHggNnB4fQogICAgLmluZm9DYXJkIC5zdGF0TGFiZWx7Zm9udC1zaXplOjEwcHh9CiAgICAuaW5mb0NhcmQgLnN0YXRWYWx1ZXtmb250LXNpemU6MjFweH0KCiAgICAuYm90dGxlTGluZXsKICAgICAgdG9wOjE4MnB4OwogICAgICB3aWR0aDptaW4oMTAwJSw1MjBweCk7CiAgICB9CiAgICAuYmdCb3R0bGVTbG90e2hlaWdodDo0NDhweH0KICAgIC5iZ0JvdHRsZXsKICAgICAgaGVpZ2h0OjQzMHB4ICFpbXBvcnRhbnQ7CiAgICAgIG1heC1oZWlnaHQ6NDMwcHggIWltcG9ydGFudDsKICAgICAgd2lkdGg6YXV0byAhaW1wb3J0YW50OwogICAgICBtYXgtd2lkdGg6OTglOwogICAgfQogICAgLmJnQm90dGxlTmFtZXsKICAgICAgZm9udC1zaXplOjE4cHg7CiAgICAgIGJvdHRvbTotMTBweDsKICAgICAgd2hpdGUtc3BhY2U6bm9ybWFsOwogICAgICBtYXgtd2lkdGg6MTIwcHg7CiAgICAgIGxpbmUtaGVpZ2h0OjEuMDI7CiAgICB9CgogICAgI2JvYXJkV3JhcHtwYWRkaW5nOjU0NnB4IDRweCAxNnB4fQogICAgI2JvYXJkewogICAgICB3aWR0aDptaW4oMTAwJSw1MjBweCk7CiAgICAgIGdhcDo2cHggM3B4OwogICAgfQogICAgLnNsb3R7aGVpZ2h0OmNhbGModmFyKC0tYm93bC1oKSArIDYwcHgpfQogIH0KCiAgLyogTm90ZWJvb2sgbWFpcyBiYWl4byAoZXguOiAxMzY2eDc2OCk6IHJlZHV6IHR1ZG8gZGUgZm9ybWEgcHJvcG9yY2lvbmFsLiAqLwogIEBtZWRpYSAobWluLXdpZHRoOjcwMHB4KSBhbmQgKG1heC1oZWlnaHQ6ODUwcHgpewogICAgOnJvb3R7LS1nbGFzcy13OjcwcHg7LS1ib3dsLWg6MTI4cHh9CiAgICAucm91bmRCdG57d2lkdGg6NDZweDtoZWlnaHQ6NDZweH0KICAgIC5pbmZvUm93e21hcmdpbi10b3A6N3B4fQogICAgLmluZm9DYXJke21pbi1oZWlnaHQ6NThweDtwYWRkaW5nOjZweCA1cHh9CiAgICAuaW5mb0NhcmQgLnN0YXRWYWx1ZXtmb250LXNpemU6MTlweH0KICAgIC5ib3R0bGVMaW5le3RvcDoxNjZweDt3aWR0aDptaW4oMTAwJSw0NzBweCl9CiAgICAuYmdCb3R0bGVTbG90e2hlaWdodDozNjRweH0KICAgIC5iZ0JvdHRsZXtoZWlnaHQ6MzUwcHggIWltcG9ydGFudDttYXgtaGVpZ2h0OjM1MHB4ICFpbXBvcnRhbnR9CiAgICAuYmdCb3R0bGVOYW1le2ZvbnQtc2l6ZToxNnB4O2JvdHRvbTotN3B4fQogICAgI2JvYXJkV3JhcHtwYWRkaW5nOjQzMnB4IDRweCAxMnB4fQogICAgI2JvYXJke3dpZHRoOm1pbigxMDAlLDQ3MHB4KTtnYXA6NXB4IDNweH0KICAgIC5zbG90e2hlaWdodDpjYWxjKHZhcigtLWJvd2wtaCkgKyA1NHB4KX0KICB9CgogIC8qIFRlbGFzIEZ1bGwgSEQgLyBtb25pdG9yZXMgYWx0b3M6IGFwcm92ZWl0YSBtZWxob3IgYSBhbHR1cmEgc2VtIGRpc3RvcmNlci4gKi8KICBAbWVkaWEgKG1pbi13aWR0aDoxMDAwcHgpIGFuZCAobWluLWhlaWdodDo5MDBweCl7CiAgICA6cm9vdHstLWdsYXNzLXc6ODhweDstLWJvd2wtaDoxNjJweH0KICAgIC5ib3R0bGVMaW5le3RvcDoxOThweDt3aWR0aDptaW4oMTAwJSw1NjBweCl9CiAgICAuYmdCb3R0bGVTbG90e2hlaWdodDo0OTJweH0KICAgIC5iZ0JvdHRsZXtoZWlnaHQ6NDc0cHggIWltcG9ydGFudDttYXgtaGVpZ2h0OjQ3NHB4ICFpbXBvcnRhbnR9CiAgICAuYmdCb3R0bGVOYW1le2ZvbnQtc2l6ZToyMHB4O2JvdHRvbTotOXB4O21heC13aWR0aDoxMzBweH0KICAgICNib2FyZFdyYXB7cGFkZGluZzo1OTZweCA2cHggMThweH0KICAgICNib2FyZHt3aWR0aDptaW4oMTAwJSw1NjBweCk7Z2FwOjhweCA1cHh9CiAgICAuc2xvdHtoZWlnaHQ6Y2FsYyh2YXIoLS1ib3dsLWgpICsgNjJweCl9CiAgfQo=").decode("utf-8")
           if marker not in s:
               pos = s.find("</style>")
               if pos < 0:
