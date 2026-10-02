@@ -2,10 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#641018">
-<title>Desafio O Gaúcho — V55</title>
-<meta name="app-version" content="55">
+<title>Desafio O Gaúcho — V62 Adaptativo</title>
+<meta name="app-version" content="62">
 <style>
 :root{--wine:#7d0e1c;--gold:#d9b15b;--cream:#f7eedc;--dark:#170c0b;--green:#65a944}
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none;touch-action:none}
@@ -463,6 +463,247 @@ header{
  .rankTable th:nth-child(3),.rankTable td:nth-child(3){width:74px;padding-right:8px}
  .currentPlayerBadge{left:3vw;bottom:2.8vh;max-width:48vw;font-size:10px;padding:8px 10px}
 }
+
+
+
+/* =========================================================
+   V62 — AUTO FIT ADAPTATIVO (CELULAR / TABLET / NOTEBOOK / PC)
+   Baseado no padrão V47 aprovado: usa visualViewport, ponteiro,
+   proporção real da tela e a ALTURA útil para compensar zoom
+   do navegador e escala do sistema operacional.
+   ========================================================= */
+:root{
+  --safe-vh:100dvh;
+  --safe-vw:100vw;
+  --v62-stage-w:100vw;
+  --v62-stage-left:0px;
+  --v62-stage-center:50vw;
+}
+html,body{height:100%;min-height:0!important}
+#game{height:var(--safe-vh)!important;max-height:var(--safe-vh)!important;min-height:0!important}
+
+/* Telefones e tablets usam sempre a altura visual real do navegador. */
+html[data-fit-profile="phone"] #game,
+html[data-fit-profile="tablet"] #game{
+  height:var(--safe-vh)!important;
+  max-height:var(--safe-vh)!important;
+  min-height:0!important;
+}
+
+/* Tablet: mantém a linguagem visual original sem superdimensionar. */
+html[data-fit-profile="tablet"] header{
+  top:clamp(10px,1.7vh,20px)!important;
+  padding-left:clamp(10px,2vw,24px)!important;
+  padding-right:clamp(10px,2vw,24px)!important;
+}
+html[data-fit-profile="tablet"] .brand{font-size:clamp(30px,4.2vw,48px)!important}
+html[data-fit-profile="tablet"] .card{min-width:clamp(76px,10vw,112px)!important;padding:clamp(7px,1vw,11px)!important}
+html[data-fit-profile="tablet"] .card b{font-size:clamp(25px,3.3vw,38px)!important}
+html[data-fit-profile="tablet"] .timer{width:clamp(84px,11vw,118px)!important;height:clamp(84px,11vw,118px)!important}
+html[data-fit-profile="tablet"] .scene{inset:clamp(130px,16vh,180px) 0 0!important}
+html[data-fit-profile="tablet"] .bottle{width:min(30vw,250px)!important;height:min(49vh,430px)!important}
+html[data-fit-profile="tablet"] .glass{width:min(25vw,205px)!important;height:min(38vh,350px)!important}
+html[data-fit-profile="tablet"] .meter{width:clamp(58px,7vw,72px)!important;height:40%!important;right:4vw!important}
+html[data-fit-profile="tablet"] .labels{right:calc(4vw + 84px)!important}
+
+/* PC / notebook: composição central mais compacta e dimensionada pela altura. */
+html[data-fit-profile="computer"] #game{
+  height:var(--safe-vh)!important;
+  max-height:var(--safe-vh)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html[data-fit-profile="computer"] header{
+  left:var(--v62-stage-left)!important;
+  right:auto!important;
+  width:var(--v62-stage-w)!important;
+  top:var(--v62-header-top)!important;
+  padding:0 var(--v62-stage-pad)!important;
+  gap:var(--v62-gap)!important;
+  transform:none!important;
+}
+html[data-fit-profile="computer"] .brand{
+  font-size:var(--v62-brand)!important;
+  line-height:.96!important;
+  max-width:34%!important;
+}
+html[data-fit-profile="computer"] .brand small{
+  display:block!important;
+  font-size:var(--v62-brand-small)!important;
+  letter-spacing:.16em!important;
+  margin-left:.8em!important;
+}
+html[data-fit-profile="computer"] .hud{
+  width:auto!important;
+  max-width:66%!important;
+  gap:var(--v62-gap)!important;
+}
+html[data-fit-profile="computer"] .card{
+  width:var(--v62-card-w)!important;
+  min-width:var(--v62-card-w)!important;
+  flex:0 0 var(--v62-card-w)!important;
+  padding:var(--v62-card-pad-y) var(--v62-card-pad-x)!important;
+  border-radius:var(--v62-card-radius)!important;
+  border-width:1.5px!important;
+}
+html[data-fit-profile="computer"] .goalCard{
+  width:var(--v62-goal-w)!important;
+  min-width:var(--v62-goal-w)!important;
+  flex-basis:var(--v62-goal-w)!important;
+}
+html[data-fit-profile="computer"] .card span{
+  font-size:var(--v62-card-label)!important;
+  letter-spacing:.08em!important;
+}
+html[data-fit-profile="computer"] .card b,
+html[data-fit-profile="computer"] .goalCard b{
+  font-size:var(--v62-card-value)!important;
+  line-height:1!important;
+}
+html[data-fit-profile="computer"] .timer{
+  width:var(--v62-timer)!important;
+  height:var(--v62-timer)!important;
+  min-width:var(--v62-timer)!important;
+  flex-basis:var(--v62-timer)!important;
+  border-width:var(--v62-timer-border)!important;
+}
+html[data-fit-profile="computer"] .scene{
+  left:var(--v62-stage-left)!important;
+  right:auto!important;
+  width:var(--v62-stage-w)!important;
+  top:var(--v62-scene-top)!important;
+  bottom:0!important;
+  inset:auto!important;
+  height:calc(var(--safe-vh) - var(--v62-scene-top))!important;
+}
+html[data-fit-profile="computer"] .bottle{
+  left:var(--v62-bottle-left)!important;
+  top:var(--v62-bottle-top)!important;
+  width:var(--v62-bottle-w)!important;
+  height:var(--v62-bottle-h)!important;
+}
+html[data-fit-profile="computer"] .bottle.pouring{
+  left:var(--v62-bottle-pour-left)!important;
+  top:var(--v62-bottle-pour-top)!important;
+  transform:rotate(112deg)!important;
+}
+html[data-fit-profile="computer"] .glass{
+  left:var(--v62-glass-left)!important;
+  top:var(--v62-glass-top)!important;
+  width:var(--v62-glass-w)!important;
+  height:var(--v62-glass-h)!important;
+}
+html[data-fit-profile="computer"] .meter{
+  right:var(--v62-meter-right)!important;
+  top:var(--v62-meter-top)!important;
+  width:var(--v62-meter-w)!important;
+  height:var(--v62-meter-h)!important;
+  border-width:3px!important;
+  border-radius:16px!important;
+  padding:6px!important;
+}
+html[data-fit-profile="computer"] .labels{
+  right:var(--v62-label-right)!important;
+  top:var(--v62-meter-top)!important;
+  height:var(--v62-meter-h)!important;
+  font-size:var(--v62-label-font)!important;
+}
+html[data-fit-profile="computer"] .liftGuide{
+  left:var(--v62-lift-left)!important;
+  top:var(--v62-lift-top)!important;
+  width:var(--v62-lift-w)!important;
+  font-size:var(--v62-tip-font)!important;
+}
+html[data-fit-profile="computer"] .liftArrow{font-size:var(--v62-arrow)!important}
+html[data-fit-profile="computer"] .controls{
+  left:var(--v62-stage-center)!important;
+  bottom:var(--v62-controls-bottom)!important;
+}
+html[data-fit-profile="computer"] .tip{font-size:var(--v62-tip-font)!important;margin-top:6px!important}
+html[data-fit-profile="computer"] .pauseGameBtn{
+  right:calc(var(--v62-stage-left) + var(--v62-stage-pad))!important;
+  bottom:var(--v62-controls-bottom)!important;
+  padding:var(--v62-pause-pad-y) var(--v62-pause-pad-x)!important;
+  font-size:var(--v62-pause-font)!important;
+}
+html[data-fit-profile="computer"] .currentPlayerBadge{
+  left:calc(var(--v62-stage-left) + var(--v62-stage-pad))!important;
+  bottom:var(--v62-controls-bottom)!important;
+  max-width:34%!important;
+  font-size:var(--v62-badge-font)!important;
+  padding:var(--v62-badge-pad-y) var(--v62-badge-pad-x)!important;
+}
+html[data-fit-profile="computer"] .scoreBurst{font-size:var(--v62-score-burst)!important;top:45%!important}
+html[data-fit-profile="computer"] .motivationBubble{top:19%!important;font-size:var(--v62-motivation)!important}
+html[data-fit-profile="computer"] .perfectHitAlert{top:31%!important;font-size:var(--v62-perfect)!important}
+html[data-fit-profile="computer"] .panel,
+html[data-fit-profile="computer"] .v55Panel{
+  max-height:calc(var(--safe-vh) - 28px)!important;
+}
+
+/* Notebook baixo / navegador ampliado: reduz mais sem virar layout de celular. */
+html[data-fit-profile="computer"][data-fit-density="compact"] .brand small,
+html[data-fit-profile="computer"][data-fit-density="micro"] .brand small{display:none!important}
+html[data-fit-profile="computer"][data-fit-density="micro"] .labels{display:none!important}
+html[data-fit-profile="computer"][data-fit-density="micro"] .liftGuide{opacity:.72!important}
+
+/* Telefone deitado: usa a altura como referência para não cortar HUD e jogo. */
+html[data-fit-profile="phone"][data-orientation="landscape"] header{
+  top:4px!important;padding:0 7px!important;gap:4px!important
+}
+html[data-fit-profile="phone"][data-orientation="landscape"] .brand{font-size:clamp(20px,6vh,27px)!important;width:24%!important;max-width:24%!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .brand small{display:none!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .hud{width:75%!important;max-width:75%!important;gap:3px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .card{height:auto!important;min-width:0!important;padding:4px 3px!important;border-radius:10px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .card span{font-size:7px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .card b{font-size:clamp(16px,6vh,22px)!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .timer{width:clamp(52px,16vh,66px)!important;height:clamp(52px,16vh,66px)!important;min-width:52px!important;min-height:52px!important;border-width:4px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .scene{inset:19vh 0 0!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .bottle{left:8vw!important;width:min(22vw,32vh)!important;height:58vh!important;top:-1vh!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .bottle.pouring{left:31vw!important;top:0!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .glass{left:53%!important;width:min(17vw,28vh)!important;height:58vh!important;top:50%!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .meter{right:3vw!important;top:26%!important;width:44px!important;height:54%!important;padding:5px!important;border-width:3px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .labels{display:none!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .liftGuide{left:2vw!important;top:46%!important;width:120px!important;font-size:10px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .liftArrow{font-size:30px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .controls{bottom:2vh!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .tip{font-size:10px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .pauseGameBtn{bottom:2vh!important;padding:7px 10px!important;font-size:10px!important}
+html[data-fit-profile="phone"][data-orientation="landscape"] .currentPlayerBadge{bottom:2vh!important;font-size:8px!important;padding:6px 8px!important}
+
+
+
+/* V62.1 — refinamento de enquadramento */
+html[data-fit-profile="computer"] .scene{
+  left:var(--v62-stage-left)!important;
+  right:auto!important;
+  top:var(--v62-scene-top)!important;
+  bottom:0!important;
+  width:var(--v62-stage-w)!important;
+  height:calc(var(--safe-vh) - var(--v62-scene-top))!important;
+}
+html[data-fit-profile="computer"] .scene:after{
+  left:calc(0px - var(--v62-stage-left))!important;
+  right:auto!important;
+  width:100vw!important;
+}
+html[data-fit-profile="phone"][data-orientation="portrait"] .bottle{
+  left:7vw!important;
+  width:39vw!important;
+  height:42vh!important;
+  top:0!important;
+}
+html[data-fit-profile="phone"][data-orientation="portrait"] .bottle.pouring{
+  left:30vw!important;
+  top:1vh!important;
+}
+html[data-fit-profile="phone"][data-orientation="portrait"] .liftGuide{
+  left:2vw!important;
+  width:145px!important;
+  top:37%!important;
+  font-size:11px!important;
+}
+html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size:36px!important}
 
 </style>
 </head>
@@ -1755,6 +1996,106 @@ $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOve
 const coverArtV55=document.querySelector('.coverArt');
 if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
 setTimeout(alignCoverStartToArtwork,80);
+
+// ===== V62 — AUTO FIT ADAPTATIVO =====
+function applyV62AdaptiveFit(){
+  const root=document.documentElement;
+  const vv=window.visualViewport;
+  const w=Math.max(1,Math.round((vv&&vv.width)||window.innerWidth||root.clientWidth||1));
+  const h=Math.max(1,Math.round((vv&&vv.height)||window.innerHeight||root.clientHeight||1));
+  const fine=window.matchMedia&&matchMedia('(pointer:fine)').matches;
+  const coarse=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+  const landscape=w>h;
+  const sw=Math.max(Number(window.screen&&screen.availWidth)||0,Number(window.screen&&screen.width)||0,w);
+  const sh=Math.max(Number(window.screen&&screen.availHeight)||0,Number(window.screen&&screen.height)||0,h);
+
+  const looksLikeComputer=landscape && (fine || (!coarse&&(sw>=800||w>=650)) || (sw>=1000&&sh>=600&&!coarse));
+  let profile;
+  if(looksLikeComputer){profile='computer';root.dataset.device='laptop'}
+  else if(Math.min(w,h)<600){profile='phone';root.dataset.device='phone'}
+  else{profile='tablet';root.dataset.device='tablet'}
+
+  root.dataset.fitProfile=profile;
+  root.dataset.orientation=landscape?'landscape':'portrait';
+  root.dataset.fitDensity=h<480?'micro':(h<680?'compact':'normal');
+  root.style.setProperty('--safe-vh',h+'px');
+  root.style.setProperty('--safe-vw',w+'px');
+
+  if(profile==='computer'){
+    const clamp=(min,v,max)=>Math.max(min,Math.min(max,v));
+    const px=n=>`${Math.round(n*10)/10}px`;
+    const stageW=clamp(600,Math.min(w*.82,h*1.15),1060);
+    const stageLeft=Math.max(0,(w-stageW)/2);
+    const stageCenter=stageLeft+stageW/2;
+
+    const vars={
+      '--v62-stage-w':stageW,
+      '--v62-stage-left':stageLeft,
+      '--v62-stage-center':stageCenter,
+      '--v62-stage-pad':clamp(8,h*.016,16),
+      '--v62-gap':clamp(3,h*.0075,8),
+      '--v62-header-top':clamp(5,h*.016,15),
+      '--v62-brand':clamp(23,h*.050,43),
+      '--v62-brand-small':clamp(6,h*.011,10),
+      '--v62-card-w':clamp(62,h*.105,92),
+      '--v62-goal-w':clamp(70,h*.116,102),
+      '--v62-card-pad-y':clamp(4,h*.008,8),
+      '--v62-card-pad-x':clamp(4,h*.010,10),
+      '--v62-card-radius':clamp(9,h*.017,15),
+      '--v62-card-label':clamp(7,h*.012,11),
+      '--v62-card-value':clamp(18,h*.034,31),
+      '--v62-timer':clamp(60,h*.112,94),
+      '--v62-timer-border':clamp(4,h*.0075,7),
+      '--v62-scene-top':clamp(72,h*.145,128),
+      '--v62-bottle-w':clamp(105,h*.205,180),
+      '--v62-bottle-h':clamp(220,h*.465,385),
+      '--v62-bottle-left':clamp(40,stageW*.085,92),
+      '--v62-bottle-top':-clamp(8,h*.016,16),
+      '--v62-bottle-pour-left':clamp(180,stageW*.33,355),
+      '--v62-bottle-pour-top':-clamp(5,h*.010,10),
+      '--v62-glass-left':stageW*.53,
+      '--v62-glass-top':Math.max(150,(h-clamp(72,h*.145,128))*.50),
+      '--v62-glass-w':clamp(90,h*.165,145),
+      '--v62-glass-h':clamp(185,h*.365,300),
+      '--v62-meter-right':clamp(18,stageW*.035,38),
+      '--v62-meter-top':clamp(90,h*.205,160),
+      '--v62-meter-w':clamp(42,h*.063,58),
+      '--v62-meter-h':clamp(155,h*.325,250),
+      '--v62-label-right':clamp(68,stageW*.115,130),
+      '--v62-label-font':clamp(9,h*.015,13),
+      '--v62-lift-left':stageLeft+clamp(8,stageW*.025,24),
+      '--v62-lift-top':clamp(170,h*.43,360),
+      '--v62-lift-w':clamp(120,h*.22,170),
+      '--v62-arrow':clamp(30,h*.055,44),
+      '--v62-tip-font':clamp(9,h*.015,13),
+      '--v62-controls-bottom':clamp(8,h*.022,18),
+      '--v62-pause-pad-y':clamp(7,h*.011,10),
+      '--v62-pause-pad-x':clamp(10,h*.017,15),
+      '--v62-pause-font':clamp(9,h*.014,12),
+      '--v62-badge-font':clamp(8,h*.0125,11),
+      '--v62-badge-pad-y':clamp(6,h*.009,9),
+      '--v62-badge-pad-x':clamp(8,h*.014,12),
+      '--v62-score-burst':clamp(36,h*.075,68),
+      '--v62-motivation':clamp(13,h*.023,20),
+      '--v62-perfect':clamp(17,h*.034,30)
+    };
+    for(const [k,v] of Object.entries(vars))root.style.setProperty(k,px(v));
+  }
+
+  // Recalibra os elementos dependentes da geometria depois do ajuste.
+  requestAnimationFrame(()=>{
+    try{alignCoverStartToArtwork()}catch(_){ }
+    try{resizeCanvas()}catch(_){ }
+    try{resizeSurface()}catch(_){ }
+  });
+}
+
+applyV62AdaptiveFit();
+window.addEventListener('resize',applyV62AdaptiveFit,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(applyV62AdaptiveFit,100),{passive:true});
+if(window.visualViewport)visualViewport.addEventListener('resize',applyV62AdaptiveFit,{passive:true});
+// ===== FIM V62 =====
+
 render();
 </script>
 </body>
