@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#641018">
-<title>Desafio O Gaúcho — V62 Adaptativo</title>
-<meta name="app-version" content="62">
+<title>Desafio O Gaúcho — V64 | TESTE Livre</title>
+<meta name="app-version" content="64">
 <style>
 :root{--wine:#7d0e1c;--gold:#d9b15b;--cream:#f7eedc;--dark:#170c0b;--green:#65a944}
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none;touch-action:none}
@@ -705,6 +705,60 @@ html[data-fit-profile="phone"][data-orientation="portrait"] .liftGuide{
 }
 html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size:36px!important}
 
+/* V63 — tutorial minimalista com demonstração animada de servir o vinho. */
+.v63HowtoOverlay{z-index:82!important; padding:clamp(10px,2.5vh,22px); background:rgba(9,4,3,.94)}
+.v63HowtoPanel{width:min(520px,96vw);max-height:calc(var(--safe-vh,100dvh) - 18px);padding:clamp(13px,2.6vh,24px);overflow:auto}
+.v63HowtoKicker{color:#e5bb6b;letter-spacing:.18em;font-size:11px;font-weight:900;margin-bottom:5px}
+.v63HowtoPanel h2{margin:0;color:#fff7e8;font-family:Georgia,serif;font-size:clamp(22px,5.1vw,31px);line-height:1.12}
+.v63HowtoPanel p{font-size:clamp(12px,2.4vw,15px);line-height:1.3;margin:8px auto 10px;max-width:420px;color:#eddab9}
+.v63Demo{position:relative;height:clamp(145px,26vh,205px);border:1px solid rgba(217,177,91,.40);border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 68% 28%,#ad694034,transparent 62%),linear-gradient(180deg,#4a2418,#1c0d0a);isolation:isolate}
+.v63DemoLabel{position:absolute;top:9px;left:12px;font-size:9px;font-weight:900;letter-spacing:.14em;color:#f4d89b}
+.v63TutorialBottle{position:absolute;left:15%;bottom:3%;width:31%;height:87%;object-fit:contain;transform-origin:50% 18%;animation:v63Tilt 4.6s ease-in-out infinite;z-index:3;filter:drop-shadow(0 7px 9px #0008)}
+.v63TutorialGlass{position:absolute;right:15%;bottom:9%;width:74px;height:133px;z-index:2}
+.v63TutorialBowl{position:absolute;top:4%;left:13%;height:63%;width:74%;border:3px solid #fff9;border-radius:9% 9% 40% 40%/8% 8% 24% 24%;overflow:hidden;background:#ffffff07}
+.v63TutorialLiquid{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ae1630,#6c0718);animation:v63Fill 4.6s linear infinite}
+.v63TutorialTarget{position:absolute;bottom:54%;left:0;right:0;height:9%;border-top:2px solid #a6f77c;border-bottom:2px solid #a6f77c;background:#6de95938;box-shadow:0 0 9px #76df54aa;z-index:3}
+.v63TutorialStem{position:absolute;left:48%;top:67%;width:5%;height:23%;background:#fffd}
+.v63TutorialBase{position:absolute;left:23%;bottom:3%;width:53%;height:7%;border:3px solid #fffc;border-radius:50%}
+.v63TutorialStream{position:absolute;left:49%;top:29%;width:4px;height:41%;border-radius:10px;background:linear-gradient(#a71c38,#f19e9a,#c81b39);box-shadow:0 0 8px #cd234eaa;transform:rotate(-24deg);transform-origin:top;opacity:0;animation:v63Stream 4.6s linear infinite;z-index:4}
+.v63TutorialFinger{position:absolute;left:23%;bottom:12%;font-size:clamp(29px,5.6vw,39px);z-index:5;filter:drop-shadow(0 3px 3px #000c);animation:v63Finger 4.6s ease-in-out infinite}
+.v63TutorialArrow{position:absolute;left:26%;top:25%;font-size:25px;color:#f1d788;text-shadow:0 0 10px #000;animation:v63Arrow 4.6s ease-in-out infinite;z-index:5}
+.v63TutorialPerfect{position:absolute;right:10%;top:18%;border-radius:999px;padding:6px 12px;background:#387b29;color:#edffdc;border:1px solid #a7f18f;font-size:clamp(12px,2.8vw,16px);font-weight:1000;opacity:0;animation:v63Perfect 4.6s ease-in-out infinite;z-index:6}
+.v63HowtoHints{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.v63HowtoHints span{font-size:11px;font-weight:900;border:1px solid #b8864438;border-radius:999px;padding:6px 9px;background:#f2d79916;color:#fae6bb}
+.v63HowtoStart{width:100%;padding:13px 22px;font-size:18px;touch-action:manipulation}
+.v63HowtoStart:disabled{opacity:.65}
+.v63HowtoAuto{margin:9px 0 0;color:#e2c7a2;font-size:11px;font-weight:800}
+@keyframes v63Tilt{0%,13%{transform:translate(0,0) rotate(8deg)}34%,68%{transform:translate(30%,0) rotate(100deg)}87%,100%{transform:translate(0,0) rotate(8deg)}}
+@keyframes v63Fill{0%,37%{height:0}72%,94%{height:58%}100%{height:0}}
+@keyframes v63Finger{0%,12%{transform:translate(0,0)}30%,65%{transform:translate(6px,-60px)}82%,100%{transform:translate(0,0)}}
+@keyframes v63Arrow{0%,10%{opacity:0;transform:translateY(8px)}21%,48%{opacity:1;transform:translateY(-10px)}60%,100%{opacity:0;transform:translateY(-19px)}}
+@keyframes v63Stream{0%,34%,77%,100%{opacity:0}40%,70%{opacity:.95}}
+@keyframes v63Perfect{0%,70%,100%{opacity:0;transform:scale(.75)}77%,93%{opacity:1;transform:scale(1.05)}}
+@media(max-height:620px){.v63HowtoPanel{padding:10px 14px}.v63Demo{height:140px}.v63HowtoPanel p{margin:5px auto 8px}.v63HowtoHints{margin:6px 0}.v63HowtoStart{padding:9px 16px}}
+@media(prefers-reduced-motion:reduce){.v63TutorialBottle,.v63TutorialLiquid,.v63TutorialFinger,.v63TutorialArrow,.v63TutorialStream,.v63TutorialPerfect{animation-duration:7s}}
+
+/* V65 — fonte maior exclusivamente no painel do ranking */
+#rankingOverlay .v55Panel{width:min(760px,96vw)!important}
+#rankingOverlay .v55Panel h2{font-size:clamp(34px,7vw,56px)!important;margin-bottom:12px!important}
+#rankingOverlay .v55Panel p{font-size:clamp(17px,3.2vw,23px)!important;line-height:1.4!important}
+#rankingOverlay .rankTable{font-size:clamp(18px,4vw,25px)!important}
+#rankingOverlay .rankTable th{font-size:.82em!important}
+#rankingOverlay .rankTable th,#rankingOverlay .rankTable td{padding:13px 8px!important}
+#rankingOverlay .rankTable th:nth-child(1),#rankingOverlay .rankTable td:nth-child(1){width:52px!important}
+#rankingOverlay .rankTable th:nth-child(3),#rankingOverlay .rankTable td:nth-child(3){width:120px!important;padding-right:14px!important}
+#rankingOverlay .rankEmpty{font-size:clamp(18px,4vw,24px)!important}
+#rankingOverlay .v55Primary{font-size:clamp(18px,3.4vw,23px)!important;padding:15px 30px!important}
+@media(max-width:700px){
+  #rankingOverlay .v55Panel{width:97vw!important;padding:20px 12px!important}
+  #rankingOverlay .v55Panel h2{font-size:clamp(34px,10vw,46px)!important}
+  #rankingOverlay .v55Panel p{font-size:clamp(16px,4.5vw,20px)!important}
+  #rankingOverlay .rankTable{font-size:clamp(17px,4.8vw,21px)!important}
+  #rankingOverlay .rankTable th,#rankingOverlay .rankTable td{padding:11px 4px!important}
+  #rankingOverlay .rankTable th:nth-child(1),#rankingOverlay .rankTable td:nth-child(1){width:40px!important}
+  #rankingOverlay .rankTable th:nth-child(3),#rankingOverlay .rankTable td:nth-child(3){width:88px!important;padding-right:6px!important}
+}
+
 </style>
 </head>
 <body>
@@ -720,13 +774,37 @@ html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size
 <div class="v55Overlay hidden" id="playerOverlay" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
   <div class="v55Panel">
     <h2 id="playerTitle">IDENTIFIQUE O JOGADOR</h2>
-    <p>Digite um nome diferente dos jogadores já registrados para iniciar a partida.</p>
+    <p>Digite um nome diferente dos jogadores já registrados. Para testar sem limite de partidas, use <b>TESTE</b>.</p>
     <input id="playerNameInput" class="playerInput" type="text" inputmode="text" autocomplete="off" maxlength="22" placeholder="NOME DO JOGADOR" aria-describedby="playerNameError">
     <div id="playerNameError" class="playerNameError" aria-live="polite"></div>
     <div class="v55Actions">
       <button id="confirmPlayerBtn" class="v55Primary" type="button" disabled>INICIAR PARTIDA</button>
       <button id="cancelPlayerBtn" class="v55Secondary" type="button">VOLTAR</button>
     </div>
+  </div>
+</div>
+
+<!-- V63: tutorial animado após identificação, antes de iniciar o cronômetro. -->
+<div class="v55Overlay v63HowtoOverlay hidden" id="tutorialOverlay" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+  <div class="v55Panel v63HowtoPanel">
+    <div class="v63HowtoKicker">COMO JOGAR · DEMONSTRAÇÃO</div>
+    <h2 id="tutorialTitle">SIRVA NA FAIXA VERDE</h2>
+    <p>Toque na garrafa e <b>arraste para cima</b>. Solte quando o vinho chegar à faixa verde para ganhar mais pontos!</p>
+    <div class="v63Demo" role="img" aria-label="Animação curta: dedo levanta a garrafa, o vinho enche a taça até a faixa verde e o jogador solta para receber 150 pontos.">
+      <div class="v63DemoLabel">VEJA O MOVIMENTO</div>
+      <img id="tutorialBottle" class="v63TutorialBottle" alt="" aria-hidden="true">
+      <div class="v63TutorialStream" aria-hidden="true"></div>
+      <div class="v63TutorialGlass" aria-hidden="true">
+        <div class="v63TutorialBowl"><div class="v63TutorialLiquid"></div><div class="v63TutorialTarget"></div></div>
+        <div class="v63TutorialStem"></div><div class="v63TutorialBase"></div>
+      </div>
+      <span class="v63TutorialFinger" aria-hidden="true">👆</span>
+      <span class="v63TutorialArrow" aria-hidden="true">↑</span>
+      <span class="v63TutorialPerfect" aria-hidden="true">+150 PERFEITO!</span>
+    </div>
+    <div class="v63HowtoHints"><span>🎯 Meta 1.000</span><span>⏱ 30 segundos</span><span>🍷 Solte na faixa verde</span></div>
+    <button class="v55Primary v63HowtoStart" id="tutorialStartBtn" type="button">JOGAR AGORA</button>
+    <div class="v63HowtoAuto" id="tutorialAuto">A partida começa em <b><span id="tutorialSeconds">5</span>s</b></div>
   </div>
 </div>
 
@@ -817,8 +895,10 @@ let rankingFromEndGame=false;
 function normalizePlayerName(name){
   return (name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toUpperCase();
 }
+// V64 — o perfil TESTE é reutilizável, não limitado a uma única inscrição.
+function isTestPlayerName(name){return normalizePlayerName(name)==='TESTE';}
 function loadRank(){
-  try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
+  try{const v=JSON.parse(localStorage.getItem(V55_RANK_KEY)||'[]');return Array.isArray(v)?v.filter(x=>!isTestPlayerName(x.name)):[]}catch(e){return []}
 }
 function loadUsedNames(){
   try{const v=JSON.parse(localStorage.getItem(V55_USED_NAMES_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}
@@ -830,7 +910,7 @@ function getPlayerRankEntry(name){
 }
 function saveRankEntry(name,pts){
   const clean=(name||'').trim().replace(/\s+/g,' ');
-  if(!clean)return;
+  if(!clean || isTestPlayerName(clean))return; // TESTE não disputa o ranking oficial.
   const normalized=normalizePlayerName(clean);
   const newScore=Number(pts)||0;
   const used=loadUsedNames();
@@ -882,7 +962,10 @@ function validatePlayerName(){
     // O mesmo nome só pode continuar quando o próprio jogador toca em JOGAR NOVAMENTE,
     // fluxo que reaproveita currentPlayerName e não passa por esta validação.
     const alreadyUsed=loadUsedNames().some(x=>normalizePlayerName(x)===normalized);
-    if(alreadyUsed){
+    if(isTestPlayerName(normalized)){
+      msg='MODO TESTE: jogue e reinicie quantas vezes quiser. Sem registro no ranking.';
+      err.classList.add('returningPlayer');
+    }else if(alreadyUsed){
       msg='Este nome já foi utilizado. Digite um nome diferente.';
       valid=false;
     }
@@ -901,15 +984,43 @@ function requestPlayerName(reuseCurrent=false){
   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
 }
 function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
+// V63 — apresenta tutorial de 5s só após o cadastro do nome. Replay permanece imediato.
+let tutorialInterval=null;
+let tutorialStarted=false;
+function closeTutorial(){
+  if(tutorialInterval!==null){clearInterval(tutorialInterval);tutorialInterval=null}
+  $('tutorialOverlay').classList.add('hidden');
+}
+function finishTutorial(){
+  if(tutorialStarted || $('tutorialOverlay').classList.contains('hidden'))return;
+  tutorialStarted=true;
+  closeTutorial();
+  startGame();
+}
+function showTutorial(){
+  closeTutorial();
+  tutorialStarted=false;
+  const demoBottle=$('tutorialBottle');
+  if(demoBottle && !demoBottle.getAttribute('src'))demoBottle.src=$('bottle').src;
+  $('tutorialSeconds').textContent='5';
+  $('tutorialStartBtn').disabled=false;
+  $('tutorialOverlay').classList.remove('hidden');
+  let seconds=5;
+  tutorialInterval=setInterval(()=>{
+    seconds--;
+    $('tutorialSeconds').textContent=String(Math.max(0,seconds));
+    if(seconds<=0)finishTutorial();
+  },1000);
+}
 function confirmPlayerName(){
   if(!validatePlayerName())return;
   currentPlayerName=$('playerNameInput').value.trim().replace(/\s+/g,' ');
   $('playerOverlay').classList.add('hidden');
-  startGame();
+  showTutorial();
 }
 function updatePlayerBadge(){
   const b=$('currentPlayerBadge');if(!b)return;
-  if(currentPlayerName){b.textContent='JOGADOR: '+currentPlayerName.toUpperCase();b.classList.remove('hidden')}
+  if(currentPlayerName){b.textContent=isTestPlayerName(currentPlayerName)?'MODO TESTE · REPETIÇÕES LIVRES':'JOGADOR: '+currentPlayerName.toUpperCase();b.classList.remove('hidden')}
   else b.classList.add('hidden');
 }
 function alignCoverStartToArtwork(){
@@ -1489,7 +1600,7 @@ function startMusic(){
     if(audioCtx.state==='suspended')audioCtx.resume();
     if(!musicMaster){
       musicMaster=audioCtx.createGain();
-      musicMaster.gain.value=.28;
+      musicMaster.gain.value=.52; // V63: somente trilha arcade mais alta; jingles/efeitos preservados
       musicMaster.connect(audioCtx.destination);
     }
     stopMusic();
@@ -1809,6 +1920,7 @@ function startCountdownTimer(){
 }
 
 function returnToCover(){
+ closeTutorial();
  rankingFromEndGame=false;
  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
@@ -1865,6 +1977,7 @@ function resumeGame(){
 }
 
 function startGame(){
+ closeTutorial();
  if(autoReturnCoverTimer){clearTimeout(autoReturnCoverTimer);autoReturnCoverTimer=null;}
  if(autoRankingTimer){clearTimeout(autoRankingTimer);autoRankingTimer=null;}
  $('rankingOverlay').classList.add('hidden');
@@ -1884,12 +1997,14 @@ function startGame(){
 }
 function endGame(){
  running=false;paused=false;pouring=false;stopLiquidSound();clearInterval(timer);cancelAnimationFrame(raf);stopMusic();
- if(!rankSavedThisGame && currentPlayerName){saveRankEntry(currentPlayerName,score);rankSavedThisGame=true;}
+   if(!rankSavedThisGame && currentPlayerName && !isTestPlayerName(currentPlayerName)){saveRankEntry(currentPlayerName,score);rankSavedThisGame=true;}
  $('pauseBtn').classList.add('hidden');$('pauseOverlay').classList.add('hidden');render();
  if(score >= 1000){
    playWinMusic();
    $('end').querySelector('h2').textContent='PARABÉNS!!!';
-   $('result').innerHTML=`<strong style="font-size:1.35em">VOCÊ GANHOU UM BRINDE!!</strong><br><br>Você atingiu a meta de <b>1000 pontos</b>.<br>Pontuação final: <b>${score} pontos</b>.`;
+       $('result').innerHTML=isTestPlayerName(currentPlayerName)
+      ? `<strong style="font-size:1.2em">META ATINGIDA NO MODO TESTE!</strong><br><br>Você alcançou <b>1000 pontos</b>.<br>Pontuação: <b>${score}</b>. Este ensaio não concorre a brindes.`
+      : `<strong style="font-size:1.35em">VOCÊ GANHOU UM BRINDE!!</strong><br><br>Você atingiu a meta de <b>1000 pontos</b>.<br>Pontuação final: <b>${score} pontos</b>.`;
  } else {
    playLoseMusic();
    $('end').querySelector('h2').textContent='INFELIZMENTE NÃO ATINGIU O OBJETIVO!';
@@ -1989,6 +2104,7 @@ $('coverRankingBtn').onclick=openRanking;
 $('closeRankingBtn').onclick=closeRanking;
 $('cancelPlayerBtn').onclick=cancelPlayerName;
 $('confirmPlayerBtn').onclick=confirmPlayerName;
+$('tutorialStartBtn').onclick=finishTutorial;
 $('playerNameInput').addEventListener('input',validatePlayerName);
 $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
 $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
@@ -1996,6 +2112,7 @@ $('playerOverlay').addEventListener('pointerdown',e=>{if(e.target===$('playerOve
 const coverArtV55=document.querySelector('.coverArt');
 if(coverArtV55){if(coverArtV55.complete)setTimeout(alignCoverStartToArtwork,20);else coverArtV55.addEventListener('load',alignCoverStartToArtwork,{once:true});}
 setTimeout(alignCoverStartToArtwork,80);
+
 
 // ===== V62 — AUTO FIT ADAPTATIVO =====
 function applyV62AdaptiveFit(){
@@ -2099,4 +2216,5 @@ if(window.visualViewport)visualViewport.addEventListener('resize',applyV62Adapti
 render();
 </script>
 </body>
+<!-- V64: Perfil TESTE com partidas ilimitadas pela capa e pelo replay; não entra no ranking nem gera prêmio. -->
 </html>
