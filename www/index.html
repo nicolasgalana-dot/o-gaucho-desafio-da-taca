@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#641018">
-<title>Desafio O Gaúcho — V64 | TESTE Livre</title>
-<meta name="app-version" content="64">
+<title>O Gaúcho — No Limite | V66</title>
+<meta name="app-version" content="66">
 <style>
 :root{--wine:#7d0e1c;--gold:#d9b15b;--cream:#f7eedc;--dark:#170c0b;--green:#65a944}
 *{box-sizing:border-box;-webkit-user-select:none;user-select:none;touch-action:none}
@@ -705,38 +705,47 @@ html[data-fit-profile="phone"][data-orientation="portrait"] .liftGuide{
 }
 html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size:36px!important}
 
-/* V63 — tutorial minimalista com demonstração animada de servir o vinho. */
-.v63HowtoOverlay{z-index:82!important; padding:clamp(10px,2.5vh,22px); background:rgba(9,4,3,.94)}
-.v63HowtoPanel{width:min(520px,96vw);max-height:calc(var(--safe-vh,100dvh) - 18px);padding:clamp(13px,2.6vh,24px);overflow:auto}
-.v63HowtoKicker{color:#e5bb6b;letter-spacing:.18em;font-size:11px;font-weight:900;margin-bottom:5px}
-.v63HowtoPanel h2{margin:0;color:#fff7e8;font-family:Georgia,serif;font-size:clamp(22px,5.1vw,31px);line-height:1.12}
-.v63HowtoPanel p{font-size:clamp(12px,2.4vw,15px);line-height:1.3;margin:8px auto 10px;max-width:420px;color:#eddab9}
-.v63Demo{position:relative;height:clamp(145px,26vh,205px);border:1px solid rgba(217,177,91,.40);border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 68% 28%,#ad694034,transparent 62%),linear-gradient(180deg,#4a2418,#1c0d0a);isolation:isolate}
-.v63DemoLabel{position:absolute;top:9px;left:12px;font-size:9px;font-weight:900;letter-spacing:.14em;color:#f4d89b}
-.v63TutorialBottle{position:absolute;left:15%;bottom:3%;width:31%;height:87%;object-fit:contain;transform-origin:50% 18%;animation:v63Tilt 4.6s ease-in-out infinite;z-index:3;filter:drop-shadow(0 7px 9px #0008)}
-.v63TutorialGlass{position:absolute;right:15%;bottom:9%;width:74px;height:133px;z-index:2}
-.v63TutorialBowl{position:absolute;top:4%;left:13%;height:63%;width:74%;border:3px solid #fff9;border-radius:9% 9% 40% 40%/8% 8% 24% 24%;overflow:hidden;background:#ffffff07}
-.v63TutorialLiquid{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ae1630,#6c0718);animation:v63Fill 4.6s linear infinite}
-.v63TutorialTarget{position:absolute;bottom:54%;left:0;right:0;height:9%;border-top:2px solid #a6f77c;border-bottom:2px solid #a6f77c;background:#6de95938;box-shadow:0 0 9px #76df54aa;z-index:3}
-.v63TutorialStem{position:absolute;left:48%;top:67%;width:5%;height:23%;background:#fffd}
-.v63TutorialBase{position:absolute;left:23%;bottom:3%;width:53%;height:7%;border:3px solid #fffc;border-radius:50%}
-.v63TutorialStream{position:absolute;left:49%;top:29%;width:4px;height:41%;border-radius:10px;background:linear-gradient(#a71c38,#f19e9a,#c81b39);box-shadow:0 0 8px #cd234eaa;transform:rotate(-24deg);transform-origin:top;opacity:0;animation:v63Stream 4.6s linear infinite;z-index:4}
-.v63TutorialFinger{position:absolute;left:23%;bottom:12%;font-size:clamp(29px,5.6vw,39px);z-index:5;filter:drop-shadow(0 3px 3px #000c);animation:v63Finger 4.6s ease-in-out infinite}
-.v63TutorialArrow{position:absolute;left:26%;top:25%;font-size:25px;color:#f1d788;text-shadow:0 0 10px #000;animation:v63Arrow 4.6s ease-in-out infinite;z-index:5}
-.v63TutorialPerfect{position:absolute;right:10%;top:18%;border-radius:999px;padding:6px 12px;background:#387b29;color:#edffdc;border:1px solid #a7f18f;font-size:clamp(12px,2.8vw,16px);font-weight:1000;opacity:0;animation:v63Perfect 4.6s ease-in-out infinite;z-index:6}
-.v63HowtoHints{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+/* V66 — gesto e vinho sincronizados com a mesma geometria da partida. */
+.v63HowtoOverlay{z-index:82!important;padding:clamp(9px,2vh,20px);background:rgba(9,4,3,.94)}
+.v63HowtoPanel{width:min(550px,96vw);max-height:calc(var(--safe-vh,100dvh) - 18px);padding:clamp(13px,2.3vh,22px);overflow:auto}
+.v63HowtoKicker{color:#e5bb6b;letter-spacing:.14em;font-size:11px;font-weight:900;margin-bottom:7px}
+.v63HowtoPanel h2{margin:0;color:#fff7e8;font-family:Georgia,serif;font-size:clamp(23px,5.1vw,32px);line-height:1.12}
+.v63HowtoPanel p{font-size:clamp(13px,2.7vw,16px);line-height:1.35;margin:9px auto 12px;max-width:440px;color:#eddab9}
+.v66Steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px;padding:0;list-style:none;text-align:left}
+.v66Steps li{padding:8px 7px;border:1px solid #b8864455;border-radius:11px;color:#d7bfa2;background:#f2d7990c;font-size:clamp(10px,2.6vw,13px);line-height:1.3}
+.v66Steps b{display:block;color:#ffe5a3;margin-bottom:3px}
+.v66Steps li.active{background:#76532366;border-color:#e5c678;color:#fff6e5}
+.v66Steps li:last-child.active{background:#2d702644;border-color:#9bde7c}
+.v63Demo{position:relative;height:clamp(210px,32vh,290px);border:1px solid rgba(217,177,91,.4);border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 68% 28%,#ad694034,transparent 62%),linear-gradient(180deg,#4a2418,#1c0d0a);isolation:isolate}
+.v63DemoLabel{position:absolute;top:9px;left:12px;font-size:10px;font-weight:900;letter-spacing:.1em;color:#f4d89b;z-index:8}
+.v63TutorialBottle{position:absolute;left:9%;top:12%;width:25%;height:80%;object-fit:contain;transform-origin:50% 18%;transform:rotate(8deg);transition:none;z-index:3;filter:drop-shadow(0 7px 9px #0008)}
+.v63TutorialGlass{position:absolute;left:69%;top:64%;transform:translate(-50%,-50%);width:25%;height:66%;z-index:2}
+.v63TutorialBowl{position:absolute;top:0;left:12%;height:66%;width:76%;border:3px solid #fffc;border-radius:12% 12% 45% 45%/8% 8% 22% 22%;overflow:hidden;background:linear-gradient(90deg,#fff1,transparent 25%,#fff2 70%,transparent)}
+.v63TutorialLiquid{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.v63TutorialTarget{position:absolute;bottom:55%;left:0;right:0;height:6%;border-top:2px solid #a6f77c;border-bottom:2px solid #a6f77c;background:#6de95938;box-shadow:0 0 9px #76df54aa;z-index:3}
+.v63TutorialLogo{position:absolute;left:0;right:0;top:22%;font-family:Georgia,serif;font-size:clamp(12px,3vw,18px);font-style:italic;color:#fffd;text-align:center;z-index:3}
+.v63TutorialStem{position:absolute;left:48%;top:66%;width:5%;height:25%;background:#fffd;border-radius:3px}
+.v63TutorialBase{position:absolute;left:22%;bottom:2%;width:56%;height:5%;border:3px solid #fffc;border-radius:50%}
+.v63TutorialStream{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+.v63TutorialFinger{position:absolute;width:38px;height:38px;transform:translate(-50%,-50%);z-index:7;pointer-events:none}
+.v63TutorialFinger:before{content:"";position:absolute;inset:3px;border:3px solid #fff9;border-radius:50%;background:#fff2;box-shadow:0 0 0 6px #ffffff10}
+.v63TutorialFinger:after{content:"👆";position:absolute;left:7px;top:7px;font-size:33px;filter:drop-shadow(0 2px 3px #000b)}
+.v63TutorialFinger.pressed:before{animation:v66TouchPulse .65s ease-out infinite}
+@keyframes v66TouchPulse{from{box-shadow:0 0 0 1px #ffffff55}to{box-shadow:0 0 0 12px #ffffff00}}
+.v63TutorialArrow{position:absolute;font-size:34px;line-height:1;color:#f1d788;z-index:6;pointer-events:none}
+.v63TutorialPerfect{position:absolute;right:7%;top:13%;border-radius:999px;padding:7px 10px;background:#387b29;color:#edffdc;border:1px solid #a7f18f;font-size:clamp(12px,2.8vw,16px);font-weight:1000;opacity:0;z-index:8}
+.v66DemoCaption{min-height:34px;margin:9px 0 0;font-size:clamp(13px,3.1vw,17px);font-weight:900;color:#fff2ca;line-height:1.3}
+.v63HowtoHints{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:9px 0}
 .v63HowtoHints span{font-size:11px;font-weight:900;border:1px solid #b8864438;border-radius:999px;padding:6px 9px;background:#f2d79916;color:#fae6bb}
-.v63HowtoStart{width:100%;padding:13px 22px;font-size:18px;touch-action:manipulation}
-.v63HowtoStart:disabled{opacity:.65}
-.v63HowtoAuto{margin:9px 0 0;color:#e2c7a2;font-size:11px;font-weight:800}
-@keyframes v63Tilt{0%,13%{transform:translate(0,0) rotate(8deg)}34%,68%{transform:translate(30%,0) rotate(100deg)}87%,100%{transform:translate(0,0) rotate(8deg)}}
-@keyframes v63Fill{0%,37%{height:0}72%,94%{height:58%}100%{height:0}}
-@keyframes v63Finger{0%,12%{transform:translate(0,0)}30%,65%{transform:translate(6px,-60px)}82%,100%{transform:translate(0,0)}}
-@keyframes v63Arrow{0%,10%{opacity:0;transform:translateY(8px)}21%,48%{opacity:1;transform:translateY(-10px)}60%,100%{opacity:0;transform:translateY(-19px)}}
-@keyframes v63Stream{0%,34%,77%,100%{opacity:0}40%,70%{opacity:.95}}
-@keyframes v63Perfect{0%,70%,100%{opacity:0;transform:scale(.75)}77%,93%{opacity:1;transform:scale(1.05)}}
-@media(max-height:620px){.v63HowtoPanel{padding:10px 14px}.v63Demo{height:140px}.v63HowtoPanel p{margin:5px auto 8px}.v63HowtoHints{margin:6px 0}.v63HowtoStart{padding:9px 16px}}
-@media(prefers-reduced-motion:reduce){.v63TutorialBottle,.v63TutorialLiquid,.v63TutorialFinger,.v63TutorialArrow,.v63TutorialStream,.v63TutorialPerfect{animation-duration:7s}}
+.v66TutorialActions{display:flex;gap:9px;align-items:stretch}
+.v63HowtoStart{flex:1;padding:13px 14px;font-size:17px;touch-action:manipulation}
+.v66TutorialReplay{padding:10px 12px;font-size:13px;touch-action:manipulation}
+.v63HowtoAuto{margin:10px 0 0;color:#e2c7a2;font-size:11px;font-weight:800}
+.v66DemoProgress{height:3px;margin-top:7px;border-radius:3px;background:#f2d79922;overflow:hidden}
+.v66DemoProgress i{display:block;width:0;height:100%;background:#ddbb71}
+.bottle.returning{animation:none}
+@media(max-height:620px){.v63HowtoPanel{padding:10px 12px}.v63Demo{height:160px}.v63HowtoPanel p{margin:6px auto}.v66Steps li{padding:5px}.v63HowtoHints{margin:5px 0}.v63HowtoStart{padding:9px 10px}.v66DemoCaption{min-height:26px;margin-top:5px}}
+@media(prefers-reduced-motion:reduce){.v63TutorialFinger.pressed:before{animation:none}}
 
 /* V65 — fonte maior exclusivamente no painel do ranking */
 #rankingOverlay .v55Panel{width:min(760px,96vw)!important}
@@ -784,27 +793,37 @@ html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size
   </div>
 </div>
 
-<!-- V63: tutorial animado após identificação, antes de iniciar o cronômetro. -->
+<!-- V66: demonstração do mesmo gesto e da mesma trajetória usados na partida. -->
 <div class="v55Overlay v63HowtoOverlay hidden" id="tutorialOverlay" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
   <div class="v55Panel v63HowtoPanel">
-    <div class="v63HowtoKicker">COMO JOGAR · DEMONSTRAÇÃO</div>
+    <div class="v63HowtoKicker">COMO JOGAR · VEJA O GESTO</div>
     <h2 id="tutorialTitle">SIRVA NA FAIXA VERDE</h2>
-    <p>Toque na garrafa e <b>arraste para cima</b>. Solte quando o vinho chegar à faixa verde para ganhar mais pontos!</p>
-    <div class="v63Demo" role="img" aria-label="Animação curta: dedo levanta a garrafa, o vinho enche a taça até a faixa verde e o jogador solta para receber 150 pontos.">
-      <div class="v63DemoLabel">VEJA O MOVIMENTO</div>
+    <p>Na garrafa, <b>segure e arraste o dedo para cima</b>. Mantenha pressionado para servir. <b>Solte na faixa verde!</b></p>
+    <ol class="v66Steps" id="tutorialSteps">
+      <li class="active"><b>1 · SEGURE</b>Toque na garrafa.</li>
+      <li><b>2 · ARRASTE ↑</b>Suba sem soltar.</li>
+      <li><b>3 · SOLTE</b>Vinho na faixa verde.</li>
+    </ol>
+    <div class="v63Demo" id="tutorialDemo" role="img" aria-label="Demonstração: o dedo segura a garrafa, arrasta para cima, mantém pressionado enquanto o vinho sai do gargalo e entra pela abertura da taça, e solta na faixa verde para marcar 150 pontos.">
+      <div class="v63DemoLabel">MESMO MOVIMENTO DO JOGO</div>
       <img id="tutorialBottle" class="v63TutorialBottle" alt="" aria-hidden="true">
-      <div class="v63TutorialStream" aria-hidden="true"></div>
+      <canvas class="v63TutorialStream" id="tutorialStream" aria-hidden="true"></canvas>
       <div class="v63TutorialGlass" aria-hidden="true">
-        <div class="v63TutorialBowl"><div class="v63TutorialLiquid"></div><div class="v63TutorialTarget"></div></div>
+        <div class="v63TutorialBowl"><canvas class="v63TutorialLiquid" id="tutorialLiquid"></canvas><div class="v63TutorialTarget"></div><div class="v63TutorialLogo">O Gaúcho</div></div>
         <div class="v63TutorialStem"></div><div class="v63TutorialBase"></div>
       </div>
-      <span class="v63TutorialFinger" aria-hidden="true">👆</span>
-      <span class="v63TutorialArrow" aria-hidden="true">↑</span>
-      <span class="v63TutorialPerfect" aria-hidden="true">+150 PERFEITO!</span>
+      <span class="v63TutorialFinger" id="tutorialFinger" aria-hidden="true"></span>
+      <span class="v63TutorialArrow" id="tutorialArrow" aria-hidden="true">↑</span>
+      <span class="v63TutorialPerfect" id="tutorialPerfect" aria-hidden="true">+150 PERFEITO!</span>
     </div>
+    <div class="v66DemoCaption" id="tutorialCaption">1 · Toque na garrafa e segure.</div>
     <div class="v63HowtoHints"><span>🎯 Meta 1.000</span><span>⏱ 30 segundos</span><span>🍷 Solte na faixa verde</span></div>
-    <button class="v55Primary v63HowtoStart" id="tutorialStartBtn" type="button">JOGAR AGORA</button>
+    <div class="v66TutorialActions">
+      <button class="v55Secondary v66TutorialReplay" id="tutorialReplayBtn" type="button">VER DE NOVO</button>
+      <button class="v55Primary v63HowtoStart" id="tutorialStartBtn" type="button">JOGAR AGORA</button>
+    </div>
     <div class="v63HowtoAuto" id="tutorialAuto">A partida começa em <b><span id="tutorialSeconds">5</span>s</b></div>
+    <div class="v66DemoProgress" aria-hidden="true"><i id="tutorialProgress"></i></div>
   </div>
 </div>
 
@@ -850,7 +869,7 @@ html[data-fit-profile="phone"][data-orientation="portrait"] .liftArrow{font-size
 <div class="scoreBurst" id="scoreBurst"></div>
 <div class="perfectHitAlert" id="perfectHitAlert">🎯 ACERTOU EM CHEIO!</div>
 <div class="controls">
-  <div class="tip" id="dragTip"><b>TOQUE NA GARRAFA E LEVANTE-A PARA SERVIR</b><br>Quanto mais você levantar, mais a garrafa inclina. Abaixe para parar.</div>
+  <div class="tip" id="dragTip"><b>TOQUE NA GARRAFA E LEVANTE-A PARA SERVIR</b><br>Arraste para cima sem soltar. Solte quando o vinho chegar à faixa verde.</div>
 </div>
 
 <div class="overlay hidden" id="start">
@@ -984,33 +1003,194 @@ function requestPlayerName(reuseCurrent=false){
   setTimeout(()=>{try{input.focus();input.select()}catch(e){}},80);
 }
 function cancelPlayerName(){$('playerOverlay').classList.add('hidden');returnToCover()}
-// V63 — apresenta tutorial de 5s só após o cadastro do nome. Replay permanece imediato.
-let tutorialInterval=null;
-let tutorialStarted=false;
+// V66 — a demonstração e a partida usam o mesmo gargalo, pose e jato.
+const POUR_START_LIFT=80/104;
+const TUTORIAL_DURATION=5000;
+function clampPour(value,min=0,max=1){return Math.max(min,Math.min(max,value));}
+function measureBottle(el){return {width:el.offsetWidth,height:el.offsetHeight,naturalWidth:el.naturalWidth||524,naturalHeight:el.naturalHeight||1536};}
+function bottleImagePoint(size,x,y,angleDeg,scale=1){
+  const fit=Math.min(size.width/size.naturalWidth,size.height/size.naturalHeight);
+  const iw=size.naturalWidth*fit,ih=size.naturalHeight*fit;
+  const px=(size.width-iw)/2+iw*x,py=(size.height-ih)/2+ih*y;
+  const ox=size.width*.5,oy=size.height*.18,a=angleDeg*Math.PI/180;
+  const dx=(px-ox)*scale,dy=(py-oy)*scale;
+  return {x:ox+dx*Math.cos(a)-dy*Math.sin(a),y:oy+dx*Math.sin(a)+dy*Math.cos(a)};
+}
+function bottleMouthPoint(size,angle,scale=1){
+  const rim=clampPour((angle-82)/30);
+  return bottleImagePoint(size,(265+42*rim)/524,74/1536,angle,scale);
+}
+function computeBottlePose(size,level,rest,view,bowl){
+  const angle=8+clampPour(level)*104;
+  const amount=clampPour(level/POUR_START_LIFT),blend=amount*amount*(3-2*amount);
+  const targetX=bowl.x+bowl.width*.40;
+  const gap=Math.max(18,Math.min(bowl.height*.65,view.height*.26));
+  const mouth=bottleMouthPoint(size,angle);
+  const corners=[[0,0],[1,0],[1,1],[0,1]].map(p=>bottleImagePoint(size,p[0],p[1],angle));
+  const safeTop=5-Math.min(...corners.map(p=>p.y-mouth.y));
+  const targetY=Math.max(12,Math.min(bowl.y-12,Math.max(bowl.y-gap,safeTop)));
+  let fit=1;
+  for(const p of corners){
+    const dx=p.x-mouth.x,dy=p.y-mouth.y;
+    if(dx<0)fit=Math.min(fit,(targetX-5)/(-dx));
+    if(dx>0)fit=Math.min(fit,(view.width-5-targetX)/dx);
+    if(dy<0)fit=Math.min(fit,(targetY-5)/(-dy));
+    if(dy>0)fit=Math.min(fit,(view.height-5-targetY)/dy);
+  }
+  const scale=1+(clampPour(fit,.15,1)-1)*blend;
+  const scaledMouth=bottleMouthPoint(size,angle,scale);
+  return {angle,scale,left:rest.left+blend*(targetX-scaledMouth.x-rest.left),top:rest.top+blend*(targetY-scaledMouth.y-rest.top)};
+}
+function applyPourPose(el,pose){
+  el.style.setProperty('left',pose.left+'px','important');
+  el.style.setProperty('top',pose.top+'px','important');
+  el.style.transform='rotate('+pose.angle+'deg) scale('+pose.scale+')';
+  el.dataset.pourScale=String(pose.scale);
+}
+function relativePourRect(el,origin){
+  const r=el.getBoundingClientRect();
+  return {x:r.left-origin.left,y:r.top-origin.top,width:r.width,height:r.height};
+}
+function liquidSurfaceY(x,W,H,level,phase,energy,strength,impact=.5){
+  const y=H*(1-level/100),amp=2.6+energy*(6.5+strength*3.5),ix=W*clampPour(impact,.18,.82);
+  const broad=Math.sin(x*.046+phase)*amp*.18,fine=Math.sin(x*.095-phase*1.35)*amp*.10;
+  const local=Math.exp(-Math.pow((x-ix)/(W*.14),2));
+  const crown=local*Math.sin(phase*2.15)*amp*.72;
+  const wake=Math.exp(-Math.pow((x-(ix-W*.12))/(W*.24),2))*Math.sin(phase*.92)*amp*.16;
+  return clampPour(y+broad+fine-crown+wake,0,H);
+}
+function paintLiquidSurface(context,W,H,level,phase,energy,strength,impact=.5){
+  context.clearRect(0,0,W,H);
+  if(level<=.1||!W||!H)return;
+  const y=H*(1-level/100);
+  context.beginPath();
+  for(let x=0;x<=W+3;x+=3){
+    const px=Math.min(x,W),py=liquidSurfaceY(px,W,H,level,phase,energy,strength,impact);
+    if(!x)context.moveTo(px,py);else context.lineTo(px,py);
+  }
+  context.lineTo(W,H);context.lineTo(0,H);context.closePath();
+  const gradient=context.createLinearGradient(0,y,0,H);
+  gradient.addColorStop(0,'rgba(173,13,36,.94)');gradient.addColorStop(.2,'rgba(119,5,23,.97)');gradient.addColorStop(1,'rgba(52,1,10,.99)');
+  context.fillStyle=gradient;context.fill();
+  context.beginPath();
+  for(let x=0;x<=W+3;x+=3){
+    const px=Math.min(x,W),py=liquidSurfaceY(px,W,H,level,phase,energy,strength,impact);
+    if(!x)context.moveTo(px,py);else context.lineTo(px,py);
+  }
+  context.strokeStyle='rgba(247,124,134,.48)';context.lineWidth=1.25;context.stroke();
+}
+function makeWinePath(start,angle,bowl,level,phase,energy,strength){
+  const a=angle*Math.PI/180,entry={x:bowl.x+bowl.width*.5,y:bowl.y+1};
+  const ey=bowl.y+Math.max(1,liquidSurfaceY(bowl.width*.5,bowl.width,bowl.height,level,phase,energy,strength));
+  const neck=Math.max(6,Math.min(18,bowl.height*.09));
+  const c1={x:start.x+Math.sin(a)*neck,y:Math.min(entry.y-2,start.y-Math.cos(a)*neck)};
+  const c2={x:entry.x,y:start.y+(entry.y-start.y)*.62},center=[];
+  for(let i=0;i<=24;i++){
+    const t=i/24,v=1-t;
+    center.push({x:v*v*v*start.x+3*v*v*t*c1.x+3*v*t*t*c2.x+t*t*t*entry.x,y:v*v*v*start.y+3*v*v*t*c1.y+3*v*t*t*c2.y+t*t*t*entry.y,u:t*.55,inside:i===24});
+  }
+  for(let i=1;i<=16;i++)center.push({x:entry.x,y:entry.y+(ey-entry.y)*i/16,u:.55+.45*i/16,inside:true});
+  return {sx:start.x,sy:start.y,ex:entry.x,ey,entry,angle:a,center,baseW:(6.6+strength*5.2)*Math.min(1,bowl.width/100)};
+}
+function paintWineStream(context,g,strength,phase){
+  const left=[],right=[];
+  for(let i=0;i<g.center.length;i++){
+    const p=g.center[i],pa=g.center[Math.max(0,i-1)],pb=g.center[Math.min(g.center.length-1,i+1)];
+    const len=Math.hypot(pb.x-pa.x,pb.y-pa.y)||1,nx=-(pb.y-pa.y)/len,ny=(pb.x-pa.x)/len;
+    const ripple=1+.085*Math.sin(p.u*20-phase*2)+.045*Math.sin(p.u*37+phase*1.25);
+    const w=g.baseW*(.88-.20*p.u)*ripple*.5;
+    left.push({x:p.x+nx*w,y:p.y+ny*w});right.push({x:p.x-nx*w,y:p.y-ny*w});
+  }
+  context.save();context.lineJoin='round';context.lineCap='round';context.beginPath();
+  context.moveTo(left[0].x,left[0].y);for(let i=1;i<left.length;i++)context.lineTo(left[i].x,left[i].y);
+  for(let i=right.length-1;i>=0;i--)context.lineTo(right[i].x,right[i].y);context.closePath();
+  context.strokeStyle='rgba(39,0,7,.28)';context.lineWidth=1.5;context.stroke();
+  const gradient=context.createLinearGradient(g.sx,g.sy,g.ex,g.ey);
+  gradient.addColorStop(0,'rgba(205,24,52,1)');gradient.addColorStop(.2,'rgba(174,10,36,1)');gradient.addColorStop(.62,'rgba(111,3,22,.995)');gradient.addColorStop(1,'rgba(73,1,15,.99)');
+  context.fillStyle=gradient;context.fill();
+  context.globalAlpha=.46;context.strokeStyle='rgba(255,174,181,.72)';context.lineWidth=.8+strength*.25;
+  context.beginPath();g.center.forEach((p,i)=>{if(i)context.lineTo(p.x+g.baseW*.12,p.y);else context.moveTo(p.x+g.baseW*.12,p.y);});context.stroke();context.restore();
+  context.save();context.translate(g.sx,g.sy);context.rotate(g.angle-Math.PI/2);
+  context.fillStyle='#bb1231';context.beginPath();context.ellipse(0,0,g.baseW*.6,Math.max(1.1,g.baseW*.25),0,0,Math.PI*2);context.fill();context.restore();
+  context.save();context.globalAlpha=.5;context.strokeStyle='#f06774';context.lineWidth=.85;
+  context.beginPath();context.ellipse(g.ex,g.ey,3+strength*2,1+strength*.35,0,0,Math.PI*2);context.stroke();context.restore();
+}
+function tutorialStateAt(ms){
+  const touch=650,ramp=900,maxLift=.94,slope=maxLift/ramp;
+  const start=POUR_START_LIFT/slope,activeRamp=Math.max(0,ramp-start);
+  const strengthSlope=104*slope/24,fullStrength=(8+maxLift*104-88)/24;
+  const rampFill=.021*activeRamp+.5*.031*strengthSlope*activeRamp*activeRamp;
+  const release=touch+ramp+(58-rampFill)/(.021+.031*fullStrength);
+  let level=maxLift*clampPour((ms-touch)/ramp),fill=0;
+  const active=Math.max(0,Math.min(ramp,ms-touch)-start);
+  fill=.021*active+.5*.031*strengthSlope*active*active;
+  if(ms>touch+ramp)fill+=(ms-touch-ramp)*(.021+.031*fullStrength);
+  if(ms>=release)level=maxLift*(1-clampPour((ms-release)/550));
+  return {lift:level,fill:Math.min(58,Math.max(0,fill)),pouring:ms>=touch+start&&ms<release,step:ms<touch?0:ms<release?1:2,release,strength:clampPour((8+level*104-88)/24)};
+}
+
+let tutorialFrame=null,tutorialStarted=false,tutorialEpoch=0,tutorialRest=null;
 function closeTutorial(){
-  if(tutorialInterval!==null){clearInterval(tutorialInterval);tutorialInterval=null}
+  if(tutorialFrame!==null){cancelAnimationFrame(tutorialFrame);tutorialFrame=null;}
   $('tutorialOverlay').classList.add('hidden');
 }
 function finishTutorial(){
-  if(tutorialStarted || $('tutorialOverlay').classList.contains('hidden'))return;
-  tutorialStarted=true;
-  closeTutorial();
-  startGame();
+  if(tutorialStarted||$('tutorialOverlay').classList.contains('hidden'))return;
+  tutorialStarted=true;closeTutorial();startGame();
+}
+function sizeTutorialCanvas(el){
+  const r=el.getBoundingClientRect(),d=devicePixelRatio||1,w=Math.round(r.width*d),h=Math.round(r.height*d);
+  if(el.width!==w||el.height!==h){el.width=w;el.height=h;}
+  const context=el.getContext('2d');context.setTransform(d,0,0,d,0,0);return context;
+}
+function tutorialAnimationFrame(ts){
+  if($('tutorialOverlay').classList.contains('hidden'))return;
+  const ms=Math.max(0,ts-tutorialEpoch),state=tutorialStateAt(ms);
+  const el=$('tutorialBottle'),stream=$('tutorialStream'),liquid=$('tutorialLiquid'),origin=stream.getBoundingClientRect();
+  const size=measureBottle(el),bowl=relativePourRect(liquid,origin),view={width:origin.width,height:origin.height};
+  const pose=computeBottlePose(size,state.lift,tutorialRest,view,bowl);
+  applyPourPose(el,pose);
+  const streamCtx=sizeTutorialCanvas(stream),liquidCtx=sizeTutorialCanvas(liquid);
+  const phase=ms*.011,energy=state.pouring?1:Math.max(0,1-(ms-state.release)/850);
+  paintLiquidSurface(liquidCtx,bowl.width,bowl.height,state.fill,phase,energy,state.strength);
+  streamCtx.clearRect(0,0,view.width,view.height);
+  if(state.pouring){
+    const mouth=bottleMouthPoint(size,pose.angle,pose.scale);
+    const g=makeWinePath({x:pose.left+mouth.x,y:pose.top+mouth.y},pose.angle,bowl,state.fill,phase,energy,state.strength);
+    paintWineStream(streamCtx,g,state.strength,phase);
+    stream.dataset.flowTrace=JSON.stringify({start:[g.sx,g.sy],entry:[g.entry.x,g.entry.y],end:[g.ex,g.ey],bowl,fill:state.fill});
+  }else delete stream.dataset.flowTrace;
+  const fingerStart=bottleImagePoint(size,.50,.68,8),finger=$('tutorialFinger'),travel=view.height*.45;
+  const gestureLift=state.step===2?.94:state.lift;
+  finger.style.left=(tutorialRest.left+fingerStart.x)+'px';
+  finger.style.top=(tutorialRest.top+fingerStart.y-travel*gestureLift)+'px';
+  finger.style.opacity=state.step===2?String(Math.max(0,1-(ms-state.release)/240)):'1';
+  finger.classList.toggle('pressed',state.step!==2);
+  const arrow=$('tutorialArrow');arrow.style.left=(tutorialRest.left+fingerStart.x+31)+'px';
+  arrow.style.top=(tutorialRest.top+fingerStart.y-travel*.55)+'px';arrow.style.opacity=state.step===1?'1':'0';
+  $('tutorialPerfect').style.opacity=state.step===2?'1':'0';
+  const captions=['1 · Toque na garrafa e segure.','2 · Arraste para cima e mantenha pressionado.','3 · Solte na faixa verde: +150 pontos!'];
+  $('tutorialCaption').textContent=captions[state.step];
+  $('tutorialSteps').querySelectorAll('li').forEach((li,i)=>li.classList.toggle('active',i===state.step));
+  $('tutorialDemo').dataset.step=String(state.step+1);
+  $('tutorialSeconds').textContent=String(Math.max(0,Math.ceil((TUTORIAL_DURATION-ms)/1000)));
+  $('tutorialProgress').style.width=(clampPour(ms/TUTORIAL_DURATION)*100)+'%';
+  if(ms>=TUTORIAL_DURATION){finishTutorial();return;}
+  tutorialFrame=requestAnimationFrame(tutorialAnimationFrame);
+}
+function replayTutorial(){
+  if(tutorialFrame!==null)cancelAnimationFrame(tutorialFrame);
+  const el=$('tutorialBottle');
+  el.style.removeProperty('left');el.style.removeProperty('top');el.style.transform='rotate(8deg)';
+  tutorialRest={left:el.offsetLeft,top:el.offsetTop};
+  tutorialEpoch=performance.now();tutorialStarted=false;
+  tutorialFrame=requestAnimationFrame(tutorialAnimationFrame);
 }
 function showTutorial(){
-  closeTutorial();
-  tutorialStarted=false;
-  const demoBottle=$('tutorialBottle');
-  if(demoBottle && !demoBottle.getAttribute('src'))demoBottle.src=$('bottle').src;
-  $('tutorialSeconds').textContent='5';
-  $('tutorialStartBtn').disabled=false;
-  $('tutorialOverlay').classList.remove('hidden');
-  let seconds=5;
-  tutorialInterval=setInterval(()=>{
-    seconds--;
-    $('tutorialSeconds').textContent=String(Math.max(0,seconds));
-    if(seconds<=0)finishTutorial();
-  },1000);
+  closeTutorial();tutorialStarted=false;
+  const el=$('tutorialBottle');if(!el.getAttribute('src'))el.src=$('bottle').src;
+  $('tutorialSeconds').textContent='5';$('tutorialOverlay').classList.remove('hidden');
+  replayTutorial();
 }
 function confirmPlayerName(){
   if(!validatePlayerName())return;
@@ -1056,209 +1236,26 @@ setTimeout(()=>{resizeCanvas();resizeSurface()},50);
 
 
 function drawLiquidSurface(){
- const r=surfaceCanvas.getBoundingClientRect(), W=r.width, H=r.height;
- sctx.clearRect(0,0,W,H);
- if(fill<=1){requestAnimationFrame(drawLiquidSurface);return}
- surfacePhase += pouring ? (.16 + flowStrength*.07) : .055;
- if(pouring) impactEnergy=Math.min(1,impactEnergy+.045); else impactEnergy*=.935;
-
- // Nos vídeos, o impacto cria uma onda localizada que se abre para os lados,
- // enquanto o restante da superfície permanece bem mais estável.
- const y=H*(1-fill/100);
- const amp=2.6+impactEnergy*(6.5+flowStrength*3.5);
- const impactX=W*Math.max(.18,Math.min(.82,surfaceImpact));
- sctx.beginPath();
- sctx.moveTo(0,y);
- for(let x=0;x<=W;x+=3){
-   const broad=Math.sin(x*.046+surfacePhase)*amp*.18;
-   const fine=Math.sin(x*.095-surfacePhase*1.35)*amp*.10;
-   const local=Math.exp(-Math.pow((x-impactX)/(W*.14),2));
-   const crown=local*Math.sin(surfacePhase*2.15)*amp*.72;
-   const wake=Math.exp(-Math.pow((x-(impactX-W*.12))/(W*.24),2))*Math.sin(surfacePhase*.92)*amp*.16;
-   sctx.lineTo(x,y+broad+fine-crown+wake);
- }
- sctx.lineTo(W,H);sctx.lineTo(0,H);sctx.closePath();
- const lg=sctx.createLinearGradient(0,y,0,H);
- lg.addColorStop(0,'rgba(173,13,36,.94)');
- lg.addColorStop(.20,'rgba(119,5,23,.97)');
- lg.addColorStop(1,'rgba(52,1,10,.99)');
- sctx.fillStyle=lg;sctx.fill();
-
- // Borda iluminada da superfície.
- sctx.strokeStyle='rgba(247,124,134,.48)';sctx.lineWidth=1.25;
- sctx.beginPath();
- for(let x=0;x<=W;x+=3){
-   const broad=Math.sin(x*.046+surfacePhase)*amp*.18;
-   const fine=Math.sin(x*.095-surfacePhase*1.35)*amp*.10;
-   const local=Math.exp(-Math.pow((x-impactX)/(W*.14),2));
-   const crown=local*Math.sin(surfacePhase*2.15)*amp*.72;
-   const wake=Math.exp(-Math.pow((x-(impactX-W*.12))/(W*.24),2))*Math.sin(surfacePhase*.92)*amp*.16;
-   const yy=y+broad+fine-crown+wake;
-   if(x===0)sctx.moveTo(x,yy);else sctx.lineTo(x,yy);
- } sctx.stroke();
-
- // Pequenas bolhas concentradas perto do ponto de impacto, como nos vídeos.
- if(pouring && Math.random()<.70){
-   const count=2+(Math.random()*3|0);
-   for(let i=0;i<count;i++){
-     const bx=impactX+(Math.random()-.5)*W*.16;
-     const by=y+1+Math.random()*7;
-     const br=.65+Math.random()*1.55;
-     sctx.strokeStyle='rgba(255,188,193,.44)';
-     sctx.lineWidth=.65;
-     sctx.beginPath();sctx.arc(bx,by,br,0,Math.PI*2);sctx.stroke();
-   }
- }
- requestAnimationFrame(drawLiquidSurface);
+  const r=surfaceCanvas.getBoundingClientRect();
+  surfacePhase+=pouring?(.16+flowStrength*.07):.055;
+  impactEnergy=pouring?Math.min(1,impactEnergy+.045):impactEnergy*.935;
+  paintLiquidSurface(sctx,r.width,r.height,fill,surfacePhase,impactEnergy,flowStrength,surfaceImpact);
+  requestAnimationFrame(drawLiquidSurface);
 }
 requestAnimationFrame(drawLiquidSurface);
-
 function fluidFrame(){
- const r=canvas.getBoundingClientRect(); ctx.clearRect(0,0,r.width,r.height);
- if(pouring && running && !locked){
-   const gr=document.querySelector('.bowl').getBoundingClientRect();
-
-   // ===== BOCA REAL DA GARRAFA =====
-   // A foto da garrafa usa object-fit:contain. Por isso calculamos primeiro o
-   // retângulo REAL ocupado pela imagem dentro do elemento e só então o gargalo.
-   // Isso prende visualmente o vinho à bica, em qualquer tamanho de celular/tablet.
-   const bw=bottle.offsetWidth, bh=bottle.offsetHeight;
-   const nw=bottle.naturalWidth||524, nh=bottle.naturalHeight||1536;
-   const imageScale=Math.min(bw/nw,bh/nh);
-   const rw=nw*imageScale, rh=nh*imageScale;
-   const padX=(bw-rw)/2, padY=(bh-rh)/2;
-   const ox=bw*.50, oy=bh*.18; // mesmo transform-origin do CSS
-   const angleDeg=8+lift*104;
-   const ang=angleDeg*Math.PI/180;
-
-   // Na imagem original, o centro do gargalo está perto de x=265 e a borda
-   // superior em y≈72. Ao inclinar, o vinho migra para a borda inferior da boca.
-   const tiltRim=Math.max(0,Math.min(1,(angleDeg-82)/30));
-   const mouthImageX=265 + 42*tiltRim;
-   const mouthImageY=74;
-   const mx=padX + rw*(mouthImageX/nw);
-   const my=padY + rh*(mouthImageY/nh);
-   const dx=mx-ox, dy=my-oy;
-   const mouthLocalX=ox + dx*Math.cos(ang) - dy*Math.sin(ang);
-   const mouthLocalY=oy + dx*Math.sin(ang) + dy*Math.cos(ang);
-   const sx=bottle.offsetLeft + mouthLocalX;
-   const sy=bottle.offsetTop  + mouthLocalY;
-
-   // Intensidade cresce conforme a garrafa passa da posição quase horizontal.
-   flowStrength=Math.max(0,Math.min(1,(angleDeg-88)/24));
-   flowPhase += .115 + flowStrength*.075;
-
-   // Superfície atual do vinho na taça.
-   const surfaceRatio=Math.max(.20,.88-(fill/100)*.68);
-   const ey=(gr.top-r.top)+gr.height*surfaceRatio;
-
-   // ===== TRAJETÓRIA CONTROLADA PARA CAIR DENTRO DA TAÇA =====
-   // Mantemos a saída tangente ao gargalo, mas ancoramos o ponto de impacto
-   // dentro da boca da taça para evitar que o vinho escape para fora em telas
-   // menores ou variações de layout. O formato final continua orgânico.
-   const ux=Math.sin(ang), uy=-Math.cos(ang); // direção inicial na saída do gargalo
-   const bowlLeft=(gr.left-r.left); // coordenada local do bowl
-   const impactX=bowlLeft + gr.width*(.50 + (flowStrength-.5)*.03);
-   const ex=Math.max(bowlLeft+gr.width*.34, Math.min(bowlLeft+gr.width*.66, impactX));
-   surfaceImpact=(ex-bowlLeft)/gr.width;
-
-   const neckLen=12 + flowStrength*7;
-   const c1x=sx + ux*neckLen;
-   const c1y=sy + uy*neckLen;
-   const midY=sy + (ey-sy)*(.33 + flowStrength*.05);
-   const pullX=(sx-ex)*.10;
-   const c2x=ex + pullX;
-   const c2y=midY;
-
-   // Amostra uma curva cúbica: começa presa ao gargalo e termina dentro da taça.
-   const samples=30;
-   const center=[];
-   for(let i=0;i<=samples;i++){
-     const u=i/samples, om=1-u;
-     const x=(om*om*om)*sx + 3*(om*om)*u*c1x + 3*om*(u*u)*c2x + (u*u*u)*ex;
-     const y=(om*om*om)*sy + 3*(om*om)*u*c1y + 3*om*(u*u)*c2y + (u*u*u)*ey;
-     center.push({x,y,u});
-   }
-
-   const baseW=6.6 + flowStrength*5.2;
-   const left=[], right=[];
-   for(let i=0;i<center.length;i++){
-     const p=center[i];
-     const pa=center[Math.max(0,i-1)], pb=center[Math.min(center.length-1,i+1)];
-     const tx=pb.x-pa.x, ty=pb.y-pa.y;
-     const len=Math.hypot(tx,ty)||1;
-     const nx=-ty/len, ny=tx/len;
-     const neck=.88-.20*p.u; // discreto afinamento ao cair
-     const ripple=1 + .085*Math.sin(p.u*20-flowPhase*2.0) + .045*Math.sin(p.u*37+flowPhase*1.25);
-     const w=baseW*neck*ripple*.5;
-     left.push({x:p.x+nx*w,y:p.y+ny*w});
-     right.push({x:p.x-nx*w,y:p.y-ny*w});
-   }
-
-   // Contorno escuro muito fino para separar o vinho do cenário.
-   ctx.save();
-   ctx.lineJoin='round';ctx.lineCap='round';
-   ctx.beginPath();
-   ctx.moveTo(left[0].x,left[0].y);
-   for(let i=1;i<left.length;i++)ctx.lineTo(left[i].x,left[i].y);
-   for(let i=right.length-1;i>=0;i--)ctx.lineTo(right[i].x,right[i].y);
-   ctx.closePath();
-   ctx.strokeStyle='rgba(39,0,7,.28)';ctx.lineWidth=2.4;ctx.stroke();
-
-   const grad=ctx.createLinearGradient(sx,sy,ex,ey);
-   grad.addColorStop(0,'rgba(205,24,52,1)');
-   grad.addColorStop(.20,'rgba(174,10,36,1)');
-   grad.addColorStop(.62,'rgba(111,3,22,.995)');
-   grad.addColorStop(1,'rgba(73,1,15,.99)');
-   ctx.fillStyle=grad;ctx.fill();
-
-   // Reflexo móvel, interrompido e fino: dá volume sem parecer plástico.
-   ctx.globalAlpha=.46;
-   ctx.strokeStyle='rgba(255,174,181,.72)';ctx.lineWidth=.9+flowStrength*.25;
-   ctx.beginPath();
-   for(let i=1;i<center.length-2;i++){
-     const p=center[i], pa=center[i-1], pb=center[i+1];
-     const tx=pb.x-pa.x, ty=pb.y-pa.y, len=Math.hypot(tx,ty)||1;
-     const nx=-ty/len, ny=tx/len;
-     const wobble=Math.sin(p.u*18-flowPhase*1.8)*.55;
-     const hx=p.x+nx*(baseW*.18+wobble), hy=p.y+ny*(baseW*.18+wobble);
-     if(i===1)ctx.moveTo(hx,hy);else ctx.lineTo(hx,hy);
-   }
-   ctx.stroke();
-   ctx.restore();
-
-   // Menisco/engrossamento exatamente na borda da bica.
-   ctx.save();
-   ctx.translate(sx,sy);ctx.rotate(ang-Math.PI/2);
-   const lipW=baseW*(1.00+.08*Math.sin(flowPhase*1.7));
-   const lipGrad=ctx.createLinearGradient(-lipW,0,lipW,0);
-   lipGrad.addColorStop(0,'rgba(98,2,20,.96)');
-   lipGrad.addColorStop(.55,'rgba(190,20,45,.99)');
-   lipGrad.addColorStop(1,'rgba(105,3,22,.98)');
-   ctx.fillStyle=lipGrad;
-   ctx.beginPath();ctx.ellipse(0,0,lipW*.62,Math.max(1.7,lipW*.27),0,0,Math.PI*2);ctx.fill();
-   ctx.restore();
-
-   // Impacto real: pequena coroa e raros micro-respingos, sem exagero.
-   const impactW=4.2+flowStrength*2.2+Math.sin(flowPhase*1.6)*.45;
-   ctx.save();ctx.globalAlpha=.43;ctx.strokeStyle='rgba(240,103,116,.76)';ctx.lineWidth=.85;
-   ctx.beginPath();ctx.ellipse(ex,ey+1,impactW,1.15+flowStrength*.35,0,0,Math.PI*2);ctx.stroke();ctx.restore();
-
-   if(Math.random() < .035 + flowStrength*.035){
-      const side=Math.random()<.5?-1:1;
-      drops.push({x:ex+side*(1+Math.random()*2.1),y:ey-1,vx:side*(.15+Math.random()*.35),vy:-.35-Math.random()*.65,a:.48,r:.35+Math.random()*.42});
-   }
- }
- for(const d of drops){
-   d.x+=d.vx;d.y+=d.vy;d.vy+=.12;d.a-=.045;
-   ctx.fillStyle=`rgba(151,9,29,${Math.max(0,d.a)})`;
-   ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();
- }
- drops=drops.filter(d=>d.a>0);
- requestAnimationFrame(fluidFrame);
+  const origin=canvas.getBoundingClientRect();ctx.clearRect(0,0,origin.width,origin.height);
+  if(pouring&&running&&!paused&&!locked){
+    const angle=8+lift*104,size=measureBottle(bottle),scale=Number(bottle.dataset.pourScale)||1;
+    const mouth=bottleMouthPoint(size,angle,scale),start={x:bottle.offsetLeft+mouth.x,y:bottle.offsetTop+mouth.y};
+    const bowl=relativePourRect(surfaceCanvas,origin);
+    flowStrength=clampPour((angle-88)/24);flowPhase+=.115+flowStrength*.075;surfaceImpact=.5;
+    const g=makeWinePath(start,angle,bowl,fill,surfacePhase,impactEnergy,flowStrength);
+    paintWineStream(ctx,g,flowStrength,flowPhase);
+    canvas.dataset.flowTrace=JSON.stringify({start:[g.sx,g.sy],entry:[g.entry.x,g.entry.y],end:[g.ex,g.ey],bowl,fill});
+  }else delete canvas.dataset.flowTrace;
+  requestAnimationFrame(fluidFrame);
 }
-// V31 — inicia efetivamente o loop visual do jato.
-// No V30 a função fluidFrame() existia, mas não recebia a primeira chamada.
 requestAnimationFrame(fluidFrame);
 
 function render(){
@@ -2021,34 +2018,27 @@ function endGame(){
 }
 let dragging=false, dragStartY=0, lift=0, dragPointer=null;
 
+let bottleDragRest=null;
 function applyBottleLift(){
-  // 0 = repouso; 1 = inclinação máxima. Nos vídeos o vinho só vence a borda
-  // do gargalo quando a garrafa está próxima da horizontal (≈88°).
-  const angle=8 + lift*104;
-  const left=10 + lift*24;
-  const top=-5 + lift*3;
-  bottle.style.left=left+'%';
-  bottle.style.top=top+'%';
-  bottle.style.transform=`rotate(${angle}deg)`;
-  const shouldPour=angle>=88 && running && !paused && !locked;
+  const origin=canvas.getBoundingClientRect(),bowl=relativePourRect(surfaceCanvas,origin);
+  const rest=bottleDragRest||{left:bottle.offsetLeft,top:bottle.offsetTop};
+  const pose=computeBottlePose(measureBottle(bottle),lift,rest,{width:origin.width,height:origin.height},bowl);
+  applyPourPose(bottle,pose);
+  const shouldPour=pose.angle>=88&&running&&!paused&&!locked;
   if(shouldPour!==pouring){
-    pouring=shouldPour;
-    last=performance.now();
-    if(pouring){
-      startLiquidSound();
-      if(navigator.vibrate) navigator.vibrate(18);
-    }else{
-      stopLiquidSound();
-    }
+    pouring=shouldPour;last=performance.now();
+    if(pouring){startLiquidSound();if(navigator.vibrate)navigator.vibrate(18);}
+    else stopLiquidSound();
   }
-  if(!pouring)flowStrength=0;
-  else updateLiquidSound();
+  if(!pouring)flowStrength=0;else updateLiquidSound();
   wine.classList.toggle('active',pouring);
 }
 
 bottle.addEventListener('pointerdown',e=>{
   if(!running||paused||locked)return;
   e.preventDefault();
+  bottle.style.left='';bottle.style.top='';bottle.style.transform='';bottle.style.transition='';
+  bottleDragRest={left:bottle.offsetLeft,top:bottle.offsetTop};
   dragging=true; dragPointer=e.pointerId; dragStartY=e.clientY;
   bottle.setPointerCapture(e.pointerId);
   bottle.classList.add('dragging');
@@ -2105,6 +2095,7 @@ $('closeRankingBtn').onclick=closeRanking;
 $('cancelPlayerBtn').onclick=cancelPlayerName;
 $('confirmPlayerBtn').onclick=confirmPlayerName;
 $('tutorialStartBtn').onclick=finishTutorial;
+$('tutorialReplayBtn').onclick=replayTutorial;
 $('playerNameInput').addEventListener('input',validatePlayerName);
 $('playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('confirmPlayerBtn').disabled)confirmPlayerName();});
 $('rankingOverlay').addEventListener('pointerdown',e=>{if(e.target===$('rankingOverlay') && !rankingFromEndGame)closeRanking();});
@@ -2216,5 +2207,5 @@ if(window.visualViewport)visualViewport.addEventListener('resize',applyV62Adapti
 render();
 </script>
 </body>
-<!-- V64: Perfil TESTE com partidas ilimitadas pela capa e pelo replay; não entra no ranking nem gera prêmio. -->
+<!-- V66: tutorial com gesto completo e jato passando pela abertura da taça até o nível real; TESTE livre e fonte do ranking preservados. -->
 </html>
